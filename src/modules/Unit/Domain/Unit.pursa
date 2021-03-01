@@ -1,0 +1,8 @@
+
+
+data Unit = Unit { 
+  name :: String,
+  age :: Int
+  }
+
+data UnitName =  String
