@@ -2,13 +2,16 @@ module Main where
 
 import Prelude
 
-import Effect (Effect)
-import Effect.Console (log)
---import Interest (calculateInterest)
 import Data.Map as M
 import Data.Maybe (Maybe(..))
+import Effect (Effect)
+import Effect.Console (log)
 import Graphics.Canvas (Context2D, fillPath, getCanvasElementById, getContext2D, rect, setFillStyle)
 import Partial.Unsafe (unsafePartial)
+import Web.Event.EventTarget (addEventListener, eventListener)
+import Web.HTML (window)
+import Web.HTML.Event.EventTypes (click)
+import Web.HTML.Window (toEventTarget)
 
 data CharaName = CharaName { value:: String }
 createCharaName:: String -> CharaName
@@ -51,8 +54,14 @@ main:: Effect Unit
 main = void $ unsafePartial do
   Just canvas <- getCanvasElementById "canvas"
   ctx <- getContext2D canvas
-
   _ <- setFillStyle ctx "#0000FF"
-
   fillPath ctx $ do
      square ctx
+ 
+  -- listen to clicks
+  target <- toEventTarget <$> window
+  clickListener <-
+    eventListener \e -> do log "hahaha"
+  addEventListener click clickListener true target
+  
+
