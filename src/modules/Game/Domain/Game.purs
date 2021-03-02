@@ -2,10 +2,15 @@ module Game.Domain where
 
 import Core.BoundedNumber (BoundedNumber, createBoundedNumber)
 
-data ScreenName = MainScreen | MapListScreen
+data ScreenName = MainScreen | UnitListScreen
 
-data Game = Game {
-  currentScreen:: ScreenName,
+newtype Screen = Screen {
+  name :: ScreenName,
+  ui:: Int
+}
+
+newtype Game = Game {
+  currentScreen:: Screen,
   options:: Options,
   uiScale:: BoundedNumber
 }
@@ -31,9 +36,12 @@ initialVolume = Volume{
   general: createBoundedNumber 0 100 100
 }
 
+mainScreen :: Screen
+mainScreen = Screen {name: MainScreen, ui: 22}
+
 initialGame:: Game
 initialGame = Game {
-  currentScreen: MainScreen,
+  currentScreen: mainScreen,
   options: Options { volume: initialVolume },
   uiScale: createBoundedNumber 0 100 50
 }
