@@ -64,3 +64,67 @@ exports.addImage = function (scene) {
     };
   };
 };
+
+exports.setImageDisplaySize = function (image) {
+  return function (width) {
+    return function (height) {
+      return function () {
+        return image.setDisplaySize(width, height);
+      };
+    };
+  };
+};
+exports.setImageOrigin = function (image) {
+  return function (x) {
+    return function (y) {
+      return function () {
+        return image.setOrigin(x, y);
+      };
+    };
+  };
+};
+exports.addTween = function (scene) {
+  return function (targets) {
+    return function (delay) {
+      return function (x) {
+        return function (y) {
+          return function (duration) {
+            return function (ease) {
+              return function (repeat) {
+                return function (yoyo) {
+                  return function () {
+                    // use tween.setCallBack to define callback
+                    return scene.add.tween({
+                      targets,
+                      delay,
+                      duration,
+                      ease,
+                      repeat,
+                      yoyo,
+                      x,
+                      y,
+                    });
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+};
+exports.delay_ = function (scene) {
+  return function (delay) {
+    return function (onError, onSuccess) {
+      scene.time.addEvent({
+        delay,
+        callback: onSuccess,
+      });
+      return function (cancelError, cancelerError, cancelerSuccess) {
+        req.cancel(); // cancel the request
+        cancelerSuccess(); // invoke the success callback for the canceler
+      };
+    };
+  };
+};
