@@ -14,6 +14,8 @@ foreign import data PhaserContainer :: Type
 
 foreign import data PhaserImage :: Type
 
+foreign import data PhaserText :: Type
+
 foreign import newGame ::  Int -> Int -> Effect PhaserGame
 
 foreign import createScene_ :: PhaserGame -> String -> EffectFnAff PhaserScene
@@ -32,6 +34,14 @@ foreign import setImageOrigin :: PhaserImage -> Int -> Int ->Effect PhaserImage
 foreign import addTween :: PhaserScene -> PhaserImage -> Int-> Int-> Int -> Int -> String-> Int -> Boolean ->Effect PhaserImage
 
 foreign import delay_:: PhaserScene -> Int -> EffectFnAff Unit
+
+foreign import text:: { 
+    scene:: PhaserScene,
+    x:: Int, 
+    y:: Int,
+    text:: String,
+    config:: { color:: String, fontSize:: Int, fontFamily:: String }
+    } -> Effect PhaserText
 
 delay :: PhaserScene -> Int -> Aff Unit
 delay a = fromEffectFnAff <<< delay_ a

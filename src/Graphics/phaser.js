@@ -128,3 +128,9 @@ exports.delay_ = function (scene) {
     };
   };
 };
+
+exports.text = function ({ scene, x, y, text, config }) {
+  return function () {
+    return scene.add.text(x, y, text, config);
+  };
+};
