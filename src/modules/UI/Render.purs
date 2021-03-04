@@ -4,17 +4,7 @@ import Prelude
 import Data.Foldable (for_)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Graphics.Phaser
-  ( PhaserContainer
-  , PhaserScene
-  , addContainer
-  , addGraphicsToContainer
-  , addImage
-  , addImageToContainer
-  , addTextToContainer
-  , solidColorRect
-  , text
-  )
+import Graphics.Phaser (PhaserContainer, PhaserScene, addContainer, addContainerToContainer, addGraphicsToContainer, addImage, addImageToContainer, addTextToContainer, solidColorRect, text)
 import UI.Elements (Element(..))
 
 addToContainer ::
@@ -41,6 +31,7 @@ render scene element parentContainer = case element of
   Container c -> do
     container <- addContainer scene c.pos.x c.pos.y
     for_ c.children (\e -> render scene e $ Just container)
+    addToContainer parentContainer container addContainerToContainer
   Image i -> do
     img <- addImage scene i.pos.x i.pos.y i.texture
     addToContainer parentContainer img addImageToContainer

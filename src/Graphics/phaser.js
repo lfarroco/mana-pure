@@ -65,6 +65,7 @@ function addToContainer({ element, container }) {
 exports.addImageToContainer = addToContainer;
 exports.addGraphicsToContainer = addToContainer;
 exports.addTextToContainer = addToContainer;
+exports.addContainerToContainer = addToContainer;
 exports.addImage = function (scene) {
   return function (x) {
     return function (y) {

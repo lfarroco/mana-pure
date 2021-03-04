@@ -73,3 +73,5 @@ foreign import addImageToContainer :: { element :: PhaserImage, container :: Pha
 foreign import addTextToContainer :: { element :: PhaserText, container :: PhaserContainer } -> Effect PhaserContainer
 
 foreign import addGraphicsToContainer :: { element :: PhaserGraphic, container :: PhaserContainer } -> Effect PhaserContainer
+
+foreign import addContainerToContainer :: { element :: PhaserContainer, container :: PhaserContainer } -> Effect PhaserContainer
