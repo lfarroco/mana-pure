@@ -1,11 +1,11 @@
 module Test.Main where
 
-import Prelude
-
 import Effect (Effect)
-import Effect.Class.Console (log)
-import Test.Core.BoundedNumber
+import Prelude
+import Test.Core.BoundedNumber (boundedTests)
+--import Test.UI.Button (testButton)
 
 main :: Effect Unit
 main = do
   boundedTests
+

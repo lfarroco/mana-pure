@@ -47,12 +47,24 @@ exports.addContainer = function (scene) {
   return function (x) {
     return function (y) {
       return function () {
-        return scene.add.container(x, y);
+        const c = scene.add.container(x, y);
+        window.container = c;
+
+        return c;
       };
     };
   };
 };
 
+function addToContainer({ element, container }) {
+  return function () {
+    return container.add(element);
+  };
+}
+
+exports.addImageToContainer = addToContainer;
+exports.addGraphicsToContainer = addToContainer;
+exports.addTextToContainer = addToContainer;
 exports.addImage = function (scene) {
   return function (x) {
     return function (y) {
@@ -122,15 +134,61 @@ exports.delay_ = function (scene) {
         callback: onSuccess,
       });
       return function (cancelError, cancelerError, cancelerSuccess) {
-        req.cancel(); // cancel the request
-        cancelerSuccess(); // invoke the success callback for the canceler
+        req.cancel();
+        cancelerSuccess();
       };
     };
   };
 };
 
-exports.text = function ({ scene, x, y, text, config }) {
+exports.text = function ({ scene, pos, text, config }) {
   return function () {
-    return scene.add.text(x, y, text, config);
+    return scene.add.text(pos.x, pos.y, text, config);
   };
+};
+
+exports.imageOnPointerUp_ = function (image) {
+  return function (onError, onSuccess) {
+    console.log(image, onSuccess);
+    image.setInteractive();
+    image.on('pointerup', onSuccess);
+
+    return function (cancelError, cancelerError, cancelerSuccess) {
+      req.cancel(); // cancel the request
+      cancelerSuccess(); // invoke the success callback for the canceler
+    };
+  };
+};
+
+exports.solidColorRect = function (scene) {
+  return function (pos) {
+    return function (size) {
+      return function (color) {
+        return function () {
+          const btn = scene.add.graphics();
+
+          const { x, y } = pos;
+          const { width, height } = size;
+
+          btn.fillStyle(color, 1);
+
+          //btn.lineStyle(2, 0xcdc0b7, 1);
+
+          btn.fillRect(x, y, width, height);
+          console.log(btn);
+          return btn;
+        };
+      };
+    };
+  };
+};
+exports.gradientRect = function ({ scene, pos, size, colors }) {
+  const btn = scene.add.graphics();
+  const { x, y } = pos;
+  const { width, height } = size;
+  const { topLeft, topRight, bottomLeft, bottomRight } = colors;
+
+  btn.fillGradientStyle(topLeft, topRight, bottomLeft, bottomRight, 1);
+
+  btn.fillRect(x, y, width, height);
 };
