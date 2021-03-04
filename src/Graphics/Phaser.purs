@@ -68,10 +68,9 @@ foreign import gradientRect ::
   } ->
   Effect PhaserGraphic
 
-foreign import addImageToContainer :: { element :: PhaserImage, container :: PhaserContainer } -> Effect PhaserContainer
-
-foreign import addTextToContainer :: { element :: PhaserText, container :: PhaserContainer } -> Effect PhaserContainer
-
-foreign import addGraphicsToContainer :: { element :: PhaserGraphic, container :: PhaserContainer } -> Effect PhaserContainer
-
-foreign import addContainerToContainer :: { element :: PhaserContainer, container :: PhaserContainer } -> Effect PhaserContainer
+foreign import addToContainer ::
+  forall a.
+  { element :: a
+  , container :: PhaserContainer
+  } ->
+  Effect PhaserContainer

@@ -9,11 +9,7 @@ exports.newGame = function (width) {
         height,
       };
 
-      const game = new Phaser.Game(config);
-
-      // for debugging
-      window.game = game;
-      return game;
+      return new Phaser.Game(config);
     };
   };
 };
@@ -47,25 +43,18 @@ exports.addContainer = function (scene) {
   return function (x) {
     return function (y) {
       return function () {
-        const c = scene.add.container(x, y);
-        window.container = c;
-
-        return c;
+        return scene.add.container(x, y);
       };
     };
   };
 };
 
-function addToContainer({ element, container }) {
+exports.addToContainer = function ({ element, container }) {
   return function () {
     return container.add(element);
   };
-}
+};
 
-exports.addImageToContainer = addToContainer;
-exports.addGraphicsToContainer = addToContainer;
-exports.addTextToContainer = addToContainer;
-exports.addContainerToContainer = addToContainer;
 exports.addImage = function (scene) {
   return function (x) {
     return function (y) {
@@ -150,7 +139,6 @@ exports.text = function ({ scene, pos, text, config }) {
 
 exports.imageOnPointerUp_ = function (image) {
   return function (onError, onSuccess) {
-    console.log(image, onSuccess);
     image.setInteractive();
     image.on('pointerup', onSuccess);
 
@@ -183,6 +171,7 @@ exports.solidColorRect = function (scene) {
     };
   };
 };
+
 exports.gradientRect = function ({ scene, pos, size, colors }) {
   const btn = scene.add.graphics();
   const { x, y } = pos;
