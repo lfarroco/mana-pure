@@ -9,7 +9,7 @@ import Effect.Class.Console (log)
 import Graphics.Phaser (addContainer, containerOnPointerUp, createScene, newGame, setContainerSize)
 import Screen.MainScreen (mainScreen)
 import UI.Render (render)
-)
+
 main :: Effect (Fiber (Fiber Unit))
 main = do
   game <- newGame 800 600
@@ -21,4 +21,3 @@ main = do
     forkAff do
       containerOnPointerUp root
       log "done"
-
