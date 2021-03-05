@@ -40,11 +40,17 @@ exports.createScene_ = function (game) {
 };
 
 exports.addContainer = function (scene) {
-  return function (x) {
-    return function (y) {
-      return function () {
-        return scene.add.container(x, y);
-      };
+  return function ({ x, y }) {
+    return function () {
+      return scene.add.container(x, y);
+    };
+  };
+};
+exports.setContainerSize = function (container) {
+  return function ({ width, height }) {
+    return function () {
+      container.setSize(width, height);
+      return container;
     };
   };
 };
@@ -141,6 +147,17 @@ exports.imageOnPointerUp_ = function (image) {
   return function (onError, onSuccess) {
     image.setInteractive();
     image.on('pointerup', onSuccess);
+
+    return function (cancelError, cancelerError, cancelerSuccess) {
+      req.cancel(); // cancel the request
+      cancelerSuccess(); // invoke the success callback for the canceler
+    };
+  };
+};
+exports.containerOnPointerUp_ = function (container) {
+  return function (onError, onSuccess) {
+    container.setInteractive();
+    container.on('pointerup', onSuccess);
 
     return function (cancelError, cancelerError, cancelerSuccess) {
       req.cancel(); // cancel the request

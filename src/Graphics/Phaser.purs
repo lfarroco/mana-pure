@@ -25,7 +25,9 @@ foreign import createScene_ :: PhaserGame -> String -> EffectFnAff PhaserScene
 createScene :: PhaserGame -> String -> Aff PhaserScene
 createScene a = fromEffectFnAff <<< createScene_ a
 
-foreign import addContainer :: PhaserScene -> Int -> Int -> Effect PhaserContainer
+foreign import addContainer :: PhaserScene -> Vector -> Effect PhaserContainer
+
+foreign import setContainerSize :: PhaserContainer -> Size -> Effect PhaserContainer
 
 foreign import addImage :: PhaserScene -> Int -> Int -> String -> Effect PhaserImage
 
@@ -52,6 +54,11 @@ foreign import imageOnPointerUp_ :: PhaserImage -> EffectFnAff Unit
 
 imageOnPointerUp :: PhaserImage -> Aff Unit
 imageOnPointerUp = fromEffectFnAff <<< imageOnPointerUp_
+
+foreign import containerOnPointerUp_ :: PhaserContainer -> EffectFnAff Unit
+
+containerOnPointerUp :: PhaserContainer -> Aff Unit
+containerOnPointerUp = fromEffectFnAff <<< containerOnPointerUp_
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 
