@@ -1,14 +1,19 @@
 module Screen.MainScreen where
 
+import Prelude
+import Core.Models (size, vec)
 import Data.List (fromFoldable)
 import Data.Maybe (Maybe(..))
+import Game.Domain.Events (ManaEvent(..))
 import UI.Elements (Element(..), createContainerId)
 
 mainScreen :: Element
 mainScreen =
   Container
     { id: createContainerId "mainScreen"
-    , pos: { x: 0, y: 0 }
+    , pos: vec 0 0
+    , size: size 1600 1200
+    , onClick: Just $ ContainerClick "hahahahahahaha"
     , children:
         fromFoldable
           [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
@@ -20,6 +25,7 @@ mainScreen =
           , Container
               { id: createContainerId "innerContainer"
               , pos: { x: 10, y: 10 }
+              , size: size 0 0
               , children:
                   fromFoldable
                     [ Rect { pos: { x: 0, y: 0 }, size: { width: 50, height: 50 }, color: "0xff33aa" }
@@ -27,5 +33,4 @@ mainScreen =
               , onClick: Nothing
               }
           ]
-    , onClick: Nothing
     }

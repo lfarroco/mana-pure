@@ -11,6 +11,7 @@ button id text pos size =
   Container
     { id: createContainerId id
     , pos
+    , size
     , onClick: Nothing
     , children:
         fromFoldable

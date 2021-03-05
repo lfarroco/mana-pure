@@ -5,6 +5,7 @@ import Core.Models (Vector, Size)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
+import Game.Domain.Events (ManaEvent)
 
 foreign import data PhaserGame :: Type
 
@@ -53,7 +54,7 @@ delay a = fromEffectFnAff <<< delay_ a
 -- replace with forall a...
 foreign import imageOnPointerUp :: PhaserImage -> (Unit -> Effect Unit) -> Effect Unit
 
-foreign import containerOnPointerUp :: PhaserContainer -> (Unit -> Effect Unit) -> Effect Unit
+foreign import containerOnPointerUp :: PhaserContainer -> ManaEvent -> (ManaEvent -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 

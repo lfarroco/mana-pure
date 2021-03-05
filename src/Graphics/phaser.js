@@ -154,16 +154,17 @@ exports.imageOnPointerUp = function (image) {
   };
 };
 exports.containerOnPointerUp = function (container) {
-  return function (listener) {
-    debugger;
-    return function () {
-      container.setInteractive();
+  return function (event) {
+    return function (listener) {
+      return function () {
+        container.setInteractive();
 
-      debugger;
-      container.on('pointerup', function () {
-        listener()();
-      });
-      return {};
+        container.on('pointerup', function () {
+          listener(event)();
+        });
+
+        return {};
+      };
     };
   };
 };
