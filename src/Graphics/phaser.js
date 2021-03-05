@@ -160,7 +160,9 @@ exports.containerOnPointerUp = function (container) {
       container.setInteractive();
 
       debugger;
-      container.on('pointerup', listener);
+      container.on('pointerup', function () {
+        listener()();
+      });
       return {};
     };
   };
