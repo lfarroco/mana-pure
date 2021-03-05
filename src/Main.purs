@@ -1,13 +1,13 @@
 module Main where
 
 import Prelude
-import Core.Models (size, vec)
+import Core.Models (vec)
 import Effect (Effect)
 import Effect.Aff (Fiber, launchAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Ref (new)
-import Graphics.Phaser (addContainer, createScene, newGame, setContainerSize)
+import Graphics.Phaser (addContainer, createScene, newGame)
 import Screen.MainScreen (mainScreen)
 import UI.Render (render)
 
@@ -18,7 +18,6 @@ main = do
   launchAff do
     scene <- createScene game "main"
     root <- addContainer scene (vec 0 0) # liftEffect
-    _ <- setContainerSize root (size 1600 1200) # liftEffect
     _ <- render scene state mainScreen root # liftEffect
     --img <- addImage scene 100 100 "backgrounds/sunset" # liftEffect
     -- _ <-
