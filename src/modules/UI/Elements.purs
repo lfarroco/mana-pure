@@ -1,19 +1,13 @@
 module UI.Elements where
 
 import Prelude
-import Core.Models (Vector, Size)
-import Data.List (List)
-import Data.Maybe (Maybe)
+import Core.Models (Size, Vector, vec)
+import Data.List (List, fromFoldable)
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 
 type Event
   = forall a. (a -> Effect Unit) -> a -> Effect Unit
-
-newtype ContainerId
-  = ContainerId String
-
-createContainerId :: String -> ContainerId
-createContainerId s = ContainerId s
 
 data Element
   = Container
@@ -25,3 +19,18 @@ data Element
   | Rect { pos :: Vector, size :: Size, color :: String }
   | Image { pos :: Vector, size :: Size, texture :: String }
   | Text { pos :: Vector, text :: String }
+
+newtype ContainerId
+  = ContainerId String
+
+createContainerId :: String -> ContainerId
+createContainerId s = ContainerId s
+
+emptyContainer :: String -> Element
+emptyContainer id =
+  Container
+    { id: createContainerId id
+    , pos: vec 0 0
+    , children: fromFoldable []
+    , onClick: Nothing
+    }
