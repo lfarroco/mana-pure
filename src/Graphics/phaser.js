@@ -143,25 +143,25 @@ exports.text = function ({ scene, pos, text, config }) {
   };
 };
 
-exports.imageOnPointerUp_ = function (image) {
-  return function (onError, onSuccess) {
-    image.setInteractive();
-    image.on('pointerup', onSuccess);
-
-    return function (cancelError, cancelerError, cancelerSuccess) {
-      req.cancel(); // cancel the request
-      cancelerSuccess(); // invoke the success callback for the canceler
+exports.imageOnPointerUp = function (image) {
+  return function (listener) {
+    return function () {
+      image.setInteractive();
+      image.on('pointerup', function () {
+        listener()();
+      });
     };
   };
 };
-exports.containerOnPointerUp_ = function (container) {
-  return function (onError, onSuccess) {
-    container.setInteractive();
-    container.on('pointerup', onSuccess);
+exports.containerOnPointerUp = function (container) {
+  return function (listener) {
+    debugger;
+    return function () {
+      container.setInteractive();
 
-    return function (cancelError, cancelerError, cancelerSuccess) {
-      req.cancel(); // cancel the request
-      cancelerSuccess(); // invoke the success callback for the canceler
+      debugger;
+      container.on('pointerup', listener);
+      return {};
     };
   };
 };

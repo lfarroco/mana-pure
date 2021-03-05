@@ -12,6 +12,7 @@ You can edit this file as you like.
   , "psci-support"
   , "quickcheck"
   , "refs"
+  , "signal"
   , "st"
   , "transformers"
   , "web-dom"

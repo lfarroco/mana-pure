@@ -50,15 +50,10 @@ foreign import text ::
 delay :: PhaserScene -> Int -> Aff Unit
 delay a = fromEffectFnAff <<< delay_ a
 
-foreign import imageOnPointerUp_ :: PhaserImage -> EffectFnAff Unit
+-- replace with forall a...
+foreign import imageOnPointerUp :: PhaserImage -> (Unit -> Effect Unit) -> Effect Unit
 
-imageOnPointerUp :: PhaserImage -> Aff Unit
-imageOnPointerUp = fromEffectFnAff <<< imageOnPointerUp_
-
-foreign import containerOnPointerUp_ :: PhaserContainer -> EffectFnAff Unit
-
-containerOnPointerUp :: PhaserContainer -> Aff Unit
-containerOnPointerUp = fromEffectFnAff <<< containerOnPointerUp_
+foreign import containerOnPointerUp :: PhaserContainer -> (Unit -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 
