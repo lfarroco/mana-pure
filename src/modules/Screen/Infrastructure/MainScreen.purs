@@ -1,4 +1,4 @@
-module Screen.MainScreen where
+module Screen.Infrastructure.MainScreen where
 
 import Prelude
 import Core.Models (size, vec)
