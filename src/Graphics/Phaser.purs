@@ -40,6 +40,8 @@ foreign import addTween :: PhaserScene -> PhaserImage -> Int -> Int -> Int -> In
 
 foreign import delay_ :: PhaserScene -> Int -> EffectFnAff Unit
 
+foreign import destroy :: forall a. a -> Effect Unit
+
 foreign import text ::
   { scene :: PhaserScene
   , pos :: Vector

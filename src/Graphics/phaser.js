@@ -202,3 +202,9 @@ exports.gradientRect = function ({ scene, pos, size, colors }) {
 
   btn.fillRect(x, y, width, height);
 };
+
+exports.destroy = function (element) {
+  return function () {
+    element.destroy();
+  };
+};
