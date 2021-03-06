@@ -6,18 +6,26 @@ import Data.Map (Map, insert)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class.Console (log)
-import Effect.Ref (modify_, read)
+import Effect.Ref (Ref, modify_, read)
 import Game.Domain.OnClick (onclick)
 import Graphics.Phaser (PhaserContainer, PhaserScene, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
-import UI.Elements (ContainerId, Element(..))
+import UI.Elements (Element(..))
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
+render ::
+  forall t65.
+  PhaserScene ->
+  Ref
+    { containers :: Map String PhaserContainer
+    | t65
+    } ->
+  Element -> PhaserContainer -> Effect PhaserContainer
 render scene state element parentContainer = case element of
   Container c -> do
     container <- addContainer scene c.pos
-    modify_ (\s -> insert c.id container s) state
+    modify_ (\s -> s { containers = insert c.id container s.containers }) state
     _ <- setContainerSize container c.size
     for_ c.children (\e -> render scene state e container)
     _ <- addToContainer_ parentContainer container
@@ -44,6 +52,6 @@ render scene state element parentContainer = case element of
         { scene
         , pos: t.pos
         , text: t.text
-        , config: { color: "#fff", fontSize: 18, fontFamily: "sans-serif" }
+        , config: { color: "#000", fontSize: 18, fontFamily: "sans-serif" }
         }
     addToContainer_ parentContainer text_

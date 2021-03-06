@@ -157,7 +157,15 @@ exports.containerOnPointerUp = function (container) {
   return function (event) {
     return function (listener) {
       return function () {
-        container.setInteractive();
+        container.setInteractive(
+          new Phaser.Geom.Rectangle(
+            container.width / 2,
+            container.height / 2,
+            container.width,
+            container.height
+          ),
+          Phaser.Geom.Rectangle.Contains
+        );
 
         container.on('pointerup', function () {
           listener(event)();
