@@ -1,9 +1,9 @@
 module Game.Domain.Events where
 
 import Prelude
+import Data.Map (Map)
 import Effect (Effect)
 import Effect.Class.Console (log)
-import Effect.Ref (Ref)
 
 newtype ScreenName
   = ScreenName String
@@ -22,6 +22,7 @@ processEvent e = case e of
 
 data ManaEvent
   = ContainerClick String
+  | Destroy String
 
-type State
-  = Ref Int
+type State a
+  = Map String a

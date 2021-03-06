@@ -2,21 +2,22 @@ module UI.Render where
 
 import Prelude
 import Data.Foldable (for_)
+import Data.Map (Map, insert)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class.Console (log)
-import Game.Domain.Events (State)
+import Effect.Ref (modify_, read)
 import Game.Domain.OnClick (onclick)
 import Graphics.Phaser (PhaserContainer, PhaserScene, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
-import UI.Elements (Element(..))
+import UI.Elements (ContainerId, Element(..))
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render :: PhaserScene -> State -> Element -> PhaserContainer -> Effect PhaserContainer
 render scene state element parentContainer = case element of
   Container c -> do
     container <- addContainer scene c.pos
+    modify_ (\s -> insert c.id container s) state
     _ <- setContainerSize container c.size
     for_ c.children (\e -> render scene state e container)
     _ <- addToContainer_ parentContainer container
@@ -25,7 +26,8 @@ render scene state element parentContainer = case element of
         log "not adding event!!"
         pure parentContainer
       Just ev -> do
-        onclick state scene container
+        s <- read state
+        onclick s scene container
           # containerOnPointerUp container ev
         log "adding cool event!!"
         pure parentContainer

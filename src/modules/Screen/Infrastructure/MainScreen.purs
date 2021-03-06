@@ -5,15 +5,15 @@ import Core.Models (size, vec)
 import Data.List (fromFoldable)
 import Data.Maybe (Maybe(..))
 import Game.Domain.Events (ManaEvent(..))
-import UI.Elements (Element(..), createContainerId)
+import UI.Elements (Element(..))
 
 mainScreen :: Element
 mainScreen =
   Container
-    { id: createContainerId "mainScreen"
+    { id: "mainScreen"
     , pos: vec 0 0
     , size: size 1600 1200
-    , onClick: Just $ ContainerClick "hahahahahahaha"
+    , onClick: Nothing
     , children:
         fromFoldable
           [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
@@ -23,14 +23,14 @@ mainScreen =
           , Text { pos: { x: 220, y: 220 }, text: "ccc" }
           , Text { pos: { x: 330, y: 330 }, text: "ddd" }
           , Container
-              { id: createContainerId "innerContainer"
+              { id: "innerContainer"
               , pos: { x: 10, y: 10 }
-              , size: size 0 0
+              , size: size 100 100
               , children:
                   fromFoldable
-                    [ Rect { pos: { x: 0, y: 0 }, size: { width: 50, height: 50 }, color: "0xff33aa" }
+                    [ Rect { pos: { x: 0, y: 0 }, size: { width: 100, height: 100 }, color: "0xff0000" }
                     ]
-              , onClick: Nothing
+              , onClick: Just $ Destroy "mainScreen"
               }
           ]
     }

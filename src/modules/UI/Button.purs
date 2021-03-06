@@ -4,12 +4,12 @@ import Prelude
 import Core.Models (Vector, Size)
 import Data.List (fromFoldable)
 import Data.Maybe (Maybe(..))
-import UI.Elements (Element(..), createContainerId)
+import UI.Elements (Element(..))
 
 button :: String -> String -> Vector -> Size -> Element
 button id text pos size =
   Container
-    { id: createContainerId id
+    { id
     , pos
     , size
     , onClick: Nothing

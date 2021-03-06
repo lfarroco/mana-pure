@@ -22,16 +22,13 @@ data Element
   | Image { pos :: Vector, size :: Size, texture :: String }
   | Text { pos :: Vector, text :: String }
 
-newtype ContainerId
-  = ContainerId String
-
-createContainerId :: String -> ContainerId
-createContainerId s = ContainerId s
+type ContainerId
+  = String
 
 emptyContainer :: String -> Element
 emptyContainer id =
   Container
-    { id: createContainerId id
+    { id
     , pos: vec 0 0
     , size: size 0 0
     , children: fromFoldable []
