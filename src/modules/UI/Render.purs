@@ -2,26 +2,28 @@ module UI.Render where
 
 import Prelude
 import Data.Foldable (for_)
-import Data.Map (Map, insert)
+import Data.Map (Map, insert, lookup)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
-import Game.Domain.OnClick (onclick)
-import Graphics.Phaser (PhaserContainer, PhaserScene, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
+import Game.Domain.Events (ManaEvent(..))
+import Graphics.Phaser (PhaserContainer, PhaserScene, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, setContainerSize, solidColorRect, text)
 import UI.Elements (Element(..))
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render ::
-  forall t65.
-  PhaserScene ->
-  Ref
-    { containers :: Map String PhaserContainer
-    | t65
-    } ->
-  Element -> PhaserContainer -> Effect PhaserContainer
+type RenderParams
+  = forall t65.
+    PhaserScene ->
+    Ref
+      { containers :: Map String PhaserContainer
+      | t65
+      } ->
+    Element -> PhaserContainer -> Effect PhaserContainer
+
+render :: RenderParams
 render scene state element parentContainer = case element of
   Container c -> do
     container <- addContainer scene c.pos
@@ -35,7 +37,7 @@ render scene state element parentContainer = case element of
         pure parentContainer
       Just ev -> do
         s <- read state
-        onclick s scene container
+        runEvent s scene container
           # containerOnPointerUp container ev
         log "adding cool event!!"
         pure parentContainer
@@ -55,3 +57,19 @@ render scene state element parentContainer = case element of
         , config: { color: "#000", fontSize: 18, fontFamily: "sans-serif" }
         }
     addToContainer_ parentContainer text_
+
+runEvent state scene container ev = case ev of
+  ContainerClick id -> do
+    --newState <- modify (\n -> n + 1) state
+    --_ <- render scene mainScreen container
+    log $ id
+  Destroy id -> do
+    _ <- case lookup id state.containers of
+      Just s -> do
+        log "found!"
+        destroy s
+      Nothing -> do
+        log "not found : ("
+        pure unit
+    log $ id
+  Render id -> log "aaa"

@@ -23,6 +23,7 @@ processEvent e = case e of
 data ManaEvent
   = ContainerClick String
   | Destroy String
+  | Render String
 
 type State a
   = Map String a
