@@ -1,4 +1,4 @@
-module Screen.Infrastructure.MainScreen where
+module Screen.Infrastructure.UnitList where
 
 import Prelude
 import Core.Models (size, vec)
@@ -8,20 +8,19 @@ import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 import UI.Elements (Element(..))
 
-mainScreen :: Element
-mainScreen =
+unitList :: Element
+unitList =
   Container
-    { id: "mainScreen"
+    { id: "unitList"
     , pos: vec 0 0
     , size: size 0 0
     , onClick: Nothing
     , children:
         fromFoldable
-          [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
-          , button "startGameBtn" "go to unit list" pos sz $ (Just $ Render "unitList")
+          [ button "unitListBtn" "go back" pos sz $ (Just $ Render "mainScreen")
           ]
     }
   where
-  pos = vec 100 200
+  pos = vec 100 100
 
   sz = size 120 50

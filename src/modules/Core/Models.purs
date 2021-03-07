@@ -12,8 +12,9 @@ type Size
 size :: Int -> Int -> Size
 size width height = { width, height }
 
-type ManaState game scene cont
+type ManaState game scene cont sceneIndex
   = { game :: game
     , scene :: scene
     , containers :: cont
+    , sceneIndex :: sceneIndex
     }
