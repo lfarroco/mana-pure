@@ -1,23 +1,21 @@
 module UI.Render where
 
 import Prelude
-import Core.Models (ManaState)
 import Data.Foldable (for_)
-import Data.Map (Map, insert, lookup)
+import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Events (ManaEvent(..))
-import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, setContainerSize, solidColorRect, text)
+import Game.Infrasctruture.ManaModels (Mana)
+import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, setContainerSize, solidColorRect, text)
 import UI.Elements (Element(..))
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render ::
-  Ref { containers :: Map String PhaserContainer, game :: PhaserGame, root :: PhaserContainer, scene :: PhaserScene, sceneIndex :: Map String Element } ->
-  Element -> PhaserContainer -> Effect PhaserContainer
+render :: Ref Mana -> Element -> PhaserContainer -> Effect PhaserContainer
 render state element parentContainer = do
   case element of
     Container c -> do
@@ -51,8 +49,7 @@ render state element parentContainer = do
           }
       addToContainer_ parentContainer text_
 
--- TODO: reduce number of parameters
-runEvent :: Ref (ManaState PhaserGame PhaserScene PhaserContainer (Map String PhaserContainer) (Map String Element)) -> ManaEvent -> Effect Unit
+runEvent :: Ref Mana -> ManaEvent -> Effect Unit
 runEvent state ev = do
   st <- read state
   case ev of
