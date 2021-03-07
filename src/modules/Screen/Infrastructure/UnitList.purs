@@ -18,7 +18,7 @@ unitList =
         fromFoldable
           [ button "unitListBtn" "go back" pos sz
               $ [ Destroy "unitList"
-                , Render "mainScreen"
+                , Render "mainScreen" "__root"
                 ]
           ]
     }

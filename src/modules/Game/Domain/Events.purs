@@ -20,10 +20,16 @@ processEvent e = case e of
   StartGame -> do log "startGame"
   ChangeScreen (ScreenName s) -> do log s
 
+type ScreenId
+  = String
+
+type ParentId
+  = String
+
 data ManaEvent
   = ContainerClick String
   | Destroy String
-  | Render String
+  | Render ScreenId ParentId
 
 type State a
   = Map String a

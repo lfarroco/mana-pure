@@ -41,6 +41,5 @@ main = do
     root <- addContainer scene (vec 0 0) # liftEffect
     state <- liftEffect $ new $ initial game scene root
     modify_ (\s -> setContainer s "__root" root) state # liftEffect
-    runEvent state root (Render "mainScreen") # liftEffect
+    runEvent state (Render "mainScreen" "__root") # liftEffect
     log "Game started" # liftEffect
-

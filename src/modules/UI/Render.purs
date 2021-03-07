@@ -29,7 +29,7 @@ render state element parentContainer = do
       _ <- addToContainer_ parentContainer container
       for_ c.onClick \ev -> do
         s <- read state
-        runEvent state container
+        runEvent state
           # containerOnPointerUp container ev
       pure parentContainer
     Image i -> do
@@ -52,8 +52,8 @@ render state element parentContainer = do
       addToContainer_ parentContainer text_
 
 -- TODO: reduce number of parameters
-runEvent :: Ref (ManaState PhaserGame PhaserScene PhaserContainer (Map String PhaserContainer) (Map String Element)) -> PhaserContainer -> ManaEvent -> Effect Unit
-runEvent state container ev = do
+runEvent :: Ref (ManaState PhaserGame PhaserScene PhaserContainer (Map String PhaserContainer) (Map String Element)) -> ManaEvent -> Effect Unit
+runEvent state ev = do
   st <- read state
   case ev of
     ContainerClick id -> do
@@ -69,8 +69,13 @@ runEvent state container ev = do
           log "not found : ("
           pure unit
       log $ id
-    Render id -> case lookup id st.sceneIndex of
+    Render id parentId -> case lookup id st.sceneIndex of
       Just e -> do
-        _ <- render state e container
+        mParent <- case lookup parentId st.containers of
+          Just cont -> do
+            _ <- render state e cont
+            pure unit
+          Nothing -> do
+            pure unit
         pure unit
       Nothing -> do pure unit

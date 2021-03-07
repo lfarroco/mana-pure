@@ -19,7 +19,7 @@ mainScreen =
           [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
           , button "startGameBtn" "go to unit list" pos sz
               $ [ Destroy "mainScreen"
-                , Render "unitList"
+                , Render "unitList" "__root"
                 ]
           ]
     }
