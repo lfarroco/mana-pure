@@ -1,13 +1,11 @@
 module UI.Button where
 
-import Prelude
-import Core.Models (Size, Vector, size, vec)
+import Core.Models (Size, Vector)
 import Data.List (fromFoldable)
-import Data.Maybe (Maybe(..))
 import Game.Domain.Events (ManaEvent)
 import UI.Elements (Element(..))
 
-button :: String -> String -> Vector -> Size -> Maybe ManaEvent -> Element
+button :: String -> String -> Vector -> Size -> Array ManaEvent -> Element
 button id text pos size onClick =
   Container
     { id

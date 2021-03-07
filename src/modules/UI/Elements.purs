@@ -3,7 +3,6 @@ module UI.Elements where
 import Prelude
 import Core.Models (Size, Vector, size, vec)
 import Data.List (List, fromFoldable)
-import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Game.Domain.Events (ManaEvent)
 
@@ -16,7 +15,7 @@ data Element
     , pos :: Vector
     , size :: Size
     , children :: List Element
-    , onClick :: Maybe ManaEvent
+    , onClick :: Array ManaEvent
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
   | Image { pos :: Vector, size :: Size, texture :: String }
@@ -32,5 +31,5 @@ emptyContainer id =
     , pos: vec 0 0
     , size: size 0 0
     , children: fromFoldable []
-    , onClick: Nothing
+    , onClick: []
     }

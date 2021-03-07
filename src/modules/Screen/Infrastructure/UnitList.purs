@@ -3,7 +3,6 @@ module Screen.Infrastructure.UnitList where
 import Prelude
 import Core.Models (size, vec)
 import Data.List (fromFoldable)
-import Data.Maybe (Maybe(..))
 import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 import UI.Elements (Element(..))
@@ -14,10 +13,13 @@ unitList =
     { id: "unitList"
     , pos: vec 0 0
     , size: size 0 0
-    , onClick: Nothing
+    , onClick: []
     , children:
         fromFoldable
-          [ button "unitListBtn" "go back" pos sz $ (Just $ Render "mainScreen")
+          [ button "unitListBtn" "go back" pos sz
+              $ [ Destroy "unitList"
+                , Render "mainScreen"
+                ]
           ]
     }
   where

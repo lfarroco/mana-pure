@@ -16,12 +16,13 @@ import UI.Elements (Element)
 import UI.Render (runEvent)
 
 type Mana
-  = ManaState PhaserGame PhaserScene (Map String PhaserContainer) (Map String Element)
+  = ManaState PhaserGame PhaserScene PhaserContainer (Map String PhaserContainer) (Map String Element)
 
-initial :: PhaserGame -> PhaserScene -> Mana
-initial game scene =
+initial :: PhaserGame -> PhaserScene -> PhaserContainer -> Mana
+initial game scene root =
   { game
   , scene
+  , root
   , containers: empty
   , sceneIndex:
       empty
@@ -37,8 +38,9 @@ main = do
   game <- newGame 800 600
   launchAff do
     scene <- createScene game "main"
-    state <- liftEffect $ new $ initial game scene
     root <- addContainer scene (vec 0 0) # liftEffect
+    state <- liftEffect $ new $ initial game scene root
     modify_ (\s -> setContainer s "__root" root) state # liftEffect
-    runEvent state scene root (Render "mainScreen") # liftEffect
+    runEvent state root (Render "mainScreen") # liftEffect
     log "Game started" # liftEffect
+

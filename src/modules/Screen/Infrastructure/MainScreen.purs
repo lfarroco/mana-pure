@@ -3,7 +3,6 @@ module Screen.Infrastructure.MainScreen where
 import Prelude
 import Core.Models (size, vec)
 import Data.List (fromFoldable)
-import Data.Maybe (Maybe(..))
 import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 import UI.Elements (Element(..))
@@ -14,11 +13,14 @@ mainScreen =
     { id: "mainScreen"
     , pos: vec 0 0
     , size: size 0 0
-    , onClick: Nothing
+    , onClick: []
     , children:
         fromFoldable
           [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
-          , button "startGameBtn" "go to unit list" pos sz $ (Just $ Render "unitList")
+          , button "startGameBtn" "go to unit list" pos sz
+              $ [ Destroy "mainScreen"
+                , Render "unitList"
+                ]
           ]
     }
   where
