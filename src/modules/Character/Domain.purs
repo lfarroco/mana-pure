@@ -1,7 +1,8 @@
 module Character.Domain where
 
 type Character
-  = { name :: String
+  = { id :: String
+    , name :: String
     , job :: String
     , age :: Int
     , str :: Int

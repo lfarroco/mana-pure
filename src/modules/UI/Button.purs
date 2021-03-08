@@ -1,8 +1,7 @@
 module UI.Button where
 
 import Core.Models (Size, Vector)
-import Game.Domain.Events (ManaEvent)
-import UI.Elements (Element(..))
+import Game.Domain.Events (Element(..), ManaEvent)
 
 button :: String -> String -> Vector -> Size -> Array ManaEvent -> Element
 button id text pos size onClick =

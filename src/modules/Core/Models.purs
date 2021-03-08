@@ -12,11 +12,12 @@ type Size
 size :: Int -> Int -> Size
 size width height = { width, height }
 
-type State game scene root cont screenIndex characterIndex
+type State game scene root cont screenIndex characterIndex components
   = { game :: game
     , root :: root
     , scene :: scene
     , containers :: cont -- rename to `containerIndex`
     , screenIndex :: screenIndex
     , characterIndex :: characterIndex
+    , components :: components
     }

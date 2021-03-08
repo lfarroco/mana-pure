@@ -14,7 +14,7 @@ import Game.Infrasctruture.ManaModels (ManaState)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.MainScreen (mainScreen)
 import Screen.Infrastructure.UnitList (unitListScreen)
-import UI.Render (runEvent)
+import UI.RenderScreen (runEvent)
 
 initial :: PhaserGame -> PhaserScene -> PhaserContainer -> ManaState
 initial game scene root =
@@ -27,6 +27,7 @@ initial game scene root =
         # insert "mainScreen" mainScreen
         # insert "unitListScreen" (unitListScreen characterIndex)
   , characterIndex
+  , components: empty
   }
 
 main :: Effect (Fiber Unit)
@@ -37,5 +38,5 @@ main = do
     root <- addContainer scene (vec 0 0) # liftEffect
     state <- liftEffect $ new $ initial game scene root
     modify_ (\st -> st { containers = insert "__root" root st.containers }) state # liftEffect
-    runEvent state (Render "mainScreen" "__root") # liftEffect
+    runEvent state (RenderScreen "mainScreen" "__root") # liftEffect
     log "Game started" # liftEffect

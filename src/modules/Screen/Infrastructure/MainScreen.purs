@@ -2,10 +2,8 @@ module Screen.Infrastructure.MainScreen where
 
 import Prelude
 import Core.Models (size, vec)
-import Data.List (fromFoldable)
-import Game.Domain.Events (ManaEvent(..))
+import Game.Domain.Events (Element(..), ManaEvent(..))
 import UI.Button (button)
-import UI.Elements (Element(..))
 
 mainScreen :: Element
 mainScreen =
@@ -18,7 +16,7 @@ mainScreen =
         [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
         , button "startGameBtn" "go to unit list" pos sz
             $ [ Destroy "mainScreen"
-              , Render "unitListScreen" "__root"
+              , RenderScreen "unitListScreen" "__root"
               ]
         ]
     }

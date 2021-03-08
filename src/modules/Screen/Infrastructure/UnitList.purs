@@ -1,16 +1,13 @@
 module Screen.Infrastructure.UnitList where
 
-import Debug.Trace
 import Prelude
 import Character.Application (CharacterIndex)
-import Character.Infrastructure (characterIndex)
 import Core.Models (size, vec)
 import Data.Array (fromFoldable)
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Map (values)
-import Game.Domain.Events (ManaEvent(..))
+import Game.Domain.Events (Element(..), ManaEvent(..))
 import UI.Button (button)
-import UI.Elements (Element(..))
 
 renderList :: CharacterIndex -> Array Element
 renderList index =
@@ -23,12 +20,11 @@ renderList index =
               (v.name)
               (vec 300 (100 + (i * 60)))
               (size 200 50)
-              [ RenderUnitInfo $ "id" <> show (i + 1) ]
+              [ RemoveChildren "unitInfoWrapper"
+              , RenderComponent "unitInfoWrapper" (UnitInfo v.id)
+              ]
         )
     # fromFoldable
-
-cc :: Array Element
-cc = renderList characterIndex
 
 unitListScreen :: CharacterIndex -> Element
 unitListScreen charaIndex =
@@ -47,7 +43,7 @@ unitListScreen charaIndex =
   children =
     [ button "unitListBtn" "go back" pos sz
         $ [ Destroy "unitListScreen"
-          , Render "mainScreen" "__root"
+          , RenderScreen "mainScreen" "__root"
           ]
     , Container
         { id: "unitInfoWrapper"
@@ -59,4 +55,4 @@ unitListScreen charaIndex =
             ]
         }
     ]
-      <> spy "list" (renderList charaIndex)
+      <> renderList charaIndex

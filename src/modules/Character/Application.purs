@@ -8,7 +8,8 @@ type CharacterIndex
 
 createCharacter :: String -> Character
 createCharacter s =
-  { name: s
+  { id: s
+  , name: s
   , job: "fighter"
   , age: 22
   , str: 11
