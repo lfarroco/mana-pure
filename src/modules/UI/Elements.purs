@@ -1,13 +1,8 @@
 module UI.Elements where
 
-import Prelude
 import Core.Models (Size, Vector, size, vec)
 import Data.List (List, fromFoldable)
-import Effect (Effect)
 import Game.Domain.Events (ManaEvent)
-
-type Event
-  = forall a. (a -> Effect Unit) -> a -> Effect Unit
 
 data Element
   = Container

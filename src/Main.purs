@@ -1,6 +1,7 @@
 module Main where
 
 import Prelude
+import Character.Infrastructure (characterIndex)
 import Core.Models (vec)
 import Data.Map (empty, insert)
 import Effect (Effect)
@@ -9,22 +10,23 @@ import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Ref (modify_, new)
 import Game.Domain.Events (ManaEvent(..))
-import Game.Infrasctruture.ManaModels (Mana)
+import Game.Infrasctruture.ManaModels (ManaState)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.MainScreen (mainScreen)
 import Screen.Infrastructure.UnitList (unitList)
 import UI.Render (runEvent)
 
-initial :: PhaserGame -> PhaserScene -> PhaserContainer -> Mana
+initial :: PhaserGame -> PhaserScene -> PhaserContainer -> ManaState
 initial game scene root =
   { game
   , scene
   , root
   , containers: empty
-  , sceneIndex:
+  , screenIndex:
       empty
         # insert "mainScreen" mainScreen
         # insert "unitList" unitList
+  , characterIndex
   }
 
 main :: Effect (Fiber Unit)

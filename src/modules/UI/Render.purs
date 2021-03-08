@@ -8,14 +8,14 @@ import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Events (ManaEvent(..))
-import Game.Infrasctruture.ManaModels (Mana)
+import Game.Infrasctruture.ManaModels (ManaState)
 import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, setContainerSize, solidColorRect, text)
 import UI.Elements (Element(..))
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render :: Ref Mana -> Element -> PhaserContainer -> Effect PhaserContainer
+render :: Ref ManaState -> Element -> PhaserContainer -> Effect PhaserContainer
 render state element parentContainer = do
   case element of
     Container c -> do
@@ -49,7 +49,7 @@ render state element parentContainer = do
           }
       addToContainer_ parentContainer text_
 
-runEvent :: Ref Mana -> ManaEvent -> Effect Unit
+runEvent :: Ref ManaState -> ManaEvent -> Effect Unit
 runEvent state ev = do
   st <- read state
   case ev of
@@ -63,14 +63,14 @@ runEvent state ev = do
           log "found!"
           destroy s
         Nothing -> do
-          log "not found : ("
+          log "not found :("
           pure unit
       log $ id
-    Render id parentId -> case lookup id st.sceneIndex of
-      Just e -> do
+    Render id parentId -> case lookup id st.screenIndex of
+      Just screen -> do
         mParent <- case lookup parentId st.containers of
           Just cont -> do
-            _ <- render state e cont
+            _ <- render state screen cont
             pure unit
           Nothing -> do
             pure unit
