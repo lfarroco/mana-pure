@@ -1,11 +1,10 @@
 module Character.Infrastructure where
 
-import Character.Application (createCharacter)
-import Character.Domain (Character)
-import Data.Map (Map, empty, insert)
+import Character.Application (CharacterIndex, createCharacter)
+import Data.Map (empty, insert)
 import Prelude ((#))
 
-characterIndex :: Map String Character
+characterIndex :: CharacterIndex
 characterIndex =
   empty # insert "id1" (createCharacter "eeea")
     # insert "id2" (createCharacter "bbb")

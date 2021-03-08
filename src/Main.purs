@@ -13,7 +13,7 @@ import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.ManaModels (ManaState)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.MainScreen (mainScreen)
-import Screen.Infrastructure.UnitList (unitList)
+import Screen.Infrastructure.UnitList (unitListScreen)
 import UI.Render (runEvent)
 
 initial :: PhaserGame -> PhaserScene -> PhaserContainer -> ManaState
@@ -25,7 +25,7 @@ initial game scene root =
   , screenIndex:
       empty
         # insert "mainScreen" mainScreen
-        # insert "unitList" unitList
+        # insert "unitListScreen" (unitListScreen characterIndex)
   , characterIndex
   }
 

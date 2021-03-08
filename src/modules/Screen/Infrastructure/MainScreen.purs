@@ -15,13 +15,12 @@ mainScreen =
     , size: size 0 0
     , onClick: []
     , children:
-        fromFoldable
-          [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
-          , button "startGameBtn" "go to unit list" pos sz
-              $ [ Destroy "mainScreen"
-                , Render "unitList" "__root"
-                ]
-          ]
+        [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
+        , button "startGameBtn" "go to unit list" pos sz
+            $ [ Destroy "mainScreen"
+              , Render "unitListScreen" "__root"
+              ]
+        ]
     }
   where
   pos = vec 100 200

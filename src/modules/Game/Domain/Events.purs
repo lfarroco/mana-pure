@@ -30,6 +30,8 @@ data ManaEvent
   = ContainerClick String
   | Destroy String
   | Render ScreenId ParentId
+  | RemoveChildren String
+  | RenderUnitInfo String
 
 type State a
   = Map String a

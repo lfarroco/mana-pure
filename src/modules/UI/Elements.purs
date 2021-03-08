@@ -1,7 +1,6 @@
 module UI.Elements where
 
 import Core.Models (Size, Vector, size, vec)
-import Data.List (List, fromFoldable)
 import Game.Domain.Events (ManaEvent)
 
 data Element
@@ -9,12 +8,14 @@ data Element
     { id :: ContainerId
     , pos :: Vector
     , size :: Size
-    , children :: List Element
+    , children :: Array Element
     , onClick :: Array ManaEvent
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
   | Image { pos :: Vector, size :: Size, texture :: String }
   | Text { pos :: Vector, text :: String }
+  -- Unit List Screen
+  | UnitInfo String
 
 type ContainerId
   = String
@@ -25,6 +26,6 @@ emptyContainer id =
     { id
     , pos: vec 0 0
     , size: size 0 0
-    , children: fromFoldable []
+    , children: []
     , onClick: []
     }

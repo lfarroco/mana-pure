@@ -7,6 +7,7 @@ You can edit this file as you like.
   [ "aff"
   , "canvas"
   , "console"
+  , "debug"
   , "effect"
   , "ordered-collections"
   , "psci-support"

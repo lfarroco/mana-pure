@@ -1,7 +1,6 @@
 module UI.Button where
 
 import Core.Models (Size, Vector)
-import Data.List (fromFoldable)
 import Game.Domain.Events (ManaEvent)
 import UI.Elements (Element(..))
 
@@ -13,15 +12,14 @@ button id text pos size onClick =
     , size
     , onClick
     , children:
-        fromFoldable
-          [ Rect
-              { pos: { x: 0, y: 0 }
-              , size: { width: size.width, height: size.height }
-              , color: "0x888888"
-              }
-          , Text
-              { pos: { x: 10, y: 10 }
-              , text
-              }
-          ]
+        [ Rect
+            { pos: { x: 0, y: 0 }
+            , size: { width: size.width, height: size.height }
+            , color: "0x888888"
+            }
+        , Text
+            { pos: { x: 10, y: 10 }
+            , text
+            }
+        ]
     }

@@ -143,6 +143,13 @@ exports.text = function ({ scene, pos, text, config }) {
   };
 };
 
+exports.removeChildren = function (container) {
+  return function () {
+    container.removeAll(true);
+    return {};
+  };
+};
+
 exports.imageOnPointerUp = function (image) {
   return function (listener) {
     return function () {
