@@ -1,7 +1,6 @@
 module UI.RenderScreen where
 
 import Prelude
-import Core.Models (vec)
 import Data.Foldable (for_)
 import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
@@ -10,7 +9,18 @@ import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Events (Element(..), ManaEvent(..))
 import Game.Infrasctruture.ManaModels (ManaState)
-import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, removeChildren, setContainerSize, solidColorRect, text)
+import Graphics.Phaser
+  ( PhaserContainer
+  , addContainer
+  , addImage
+  , addToContainer
+  , containerOnPointerUp
+  , destroy
+  , removeChildren
+  , setContainerSize
+  , solidColorRect
+  , text
+  )
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
@@ -46,35 +56,11 @@ render state element parentContainer = do
           , config: { color: "#fff", fontSize: 18, fontFamily: "sans-serif" }
           }
       addToContainer_ parentContainer text_
-    UnitInfo id -> do
-      case chara of
-        Nothing -> do
-          pure st.root
-        Just c -> do
-          case parent of
-            Just p -> do
-              text_ <-
-                text
-                  { scene: st.scene
-                  , pos: vec 0 0
-                  , text: c.name <> " // " <> c.name
-                  , config: { color: "#f00", fontSize: 18, fontFamily: "sans-serif" }
-                  }
-              addToContainer_ p text_
-            Nothing -> pure st.root
-      where
-      chara = lookup id st.characterIndex
-
-      parent = lookup "unitInfoWrapper" st.containers -- TODO: remove screens from map
 
 runEvent :: Ref ManaState -> ManaEvent -> Effect Unit
 runEvent state ev = do
   st <- read state
   case ev of
-    ContainerClick id -> do
-      --newState <- modify (\n -> n + 1) state
-      --_ <- render scene mainScreen container
-      log $ id
     Destroy id -> do
       case lookup id st.containers of
         Just s -> destroy s

@@ -21,10 +21,17 @@ renderList index =
               (vec 300 (100 + (i * 60)))
               (size 200 50)
               [ RemoveChildren "unitInfoWrapper"
-              , RenderComponent "unitInfoWrapper" (UnitInfo v.id)
+              , RenderComponent "unitInfoWrapper" (unitInfo v.id v.name)
               ]
         )
     # fromFoldable
+
+unitInfo :: String -> String -> Element
+unitInfo id name =
+  Text
+    { pos: vec 0 0
+    , text: id <> " // " <> name
+    }
 
 unitListScreen :: CharacterIndex -> Element
 unitListScreen charaIndex =
@@ -51,7 +58,7 @@ unitListScreen charaIndex =
         , size: size 0 0
         , onClick: []
         , children:
-            [ UnitInfo "id1"
+            [ unitInfo "id1" "id1"
             ]
         }
     ]
