@@ -6,7 +6,7 @@ import Core.Models (size, vec)
 import Data.Array (fromFoldable)
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Map (values)
-import Game.Domain.Element (Element(..))
+import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 
@@ -21,8 +21,8 @@ renderList index =
               (v.name)
               (vec 300 (100 + (i * 60)))
               (size 200 50)
-              [ RemoveChildren "unitInfoWrapper"
-              , RenderComponent "unitInfoWrapper" (unitInfo v.id v.name)
+              [ RemoveChildren $ createContainerId "unitInfoWrapper"
+              , RenderComponent (createContainerId "unitInfoWrapper") (unitInfo v.id v.name)
               ]
         )
     # fromFoldable
@@ -37,7 +37,7 @@ unitInfo id name =
 unitListScreen :: CharacterIndex -> Element
 unitListScreen charaIndex =
   Container
-    { id: "unitListScreen"
+    { id: createContainerId "unitListScreen"
     , pos: vec 0 0
     , size: size 800 600
     , onClick: []
@@ -50,11 +50,11 @@ unitListScreen charaIndex =
 
   children =
     [ button "unitListBtn" "go back" pos sz
-        $ [ Destroy "unitListScreen"
-          , RenderScreen "mainScreen" "__root"
+        $ [ Destroy $ createContainerId "unitListScreen"
+          , RenderScreen "mainScreen" $ createContainerId "__root"
           ]
     , Container
-        { id: "unitInfoWrapper"
+        { id: createContainerId "unitInfoWrapper"
         , pos: vec 500 200
         , size: size 0 0
         , onClick: []

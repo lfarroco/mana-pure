@@ -5,7 +5,7 @@ import Core.Models (Vector, Size)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
-import Game.Domain.Element (Element)
+import Game.Domain.Element (ContainerId, Element)
 import Game.Domain.Events (ManaEvent)
 
 foreign import data PhaserGame :: Type
@@ -60,7 +60,7 @@ foreign import imageOnPointerUp :: PhaserImage -> (Unit -> Effect Unit) -> Effec
 
 foreign import containerOnPointerUp ::
   PhaserContainer ->
-  (ManaEvent Element) -> ((ManaEvent Element) -> Effect Unit) -> Effect Unit
+  (ManaEvent Element ContainerId) -> ((ManaEvent Element ContainerId) -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 

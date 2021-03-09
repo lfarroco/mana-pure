@@ -5,36 +5,35 @@ import Data.Map (lookup)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Ref (Ref, read)
-import Game.Domain.Element (Element)
+import Game.Domain.Element (ContainerId, Element)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
-import Graphics.Phaser (PhaserContainer, destroy, removeChildren)
+import Game.Infrastructure.Renderer (Renderer)
+import Graphics.Phaser (destroy, removeChildren)
 
-runEvent ::
-  (Ref PhaserState -> Element -> PhaserContainer -> Effect PhaserContainer) ->
-  Ref PhaserState -> ManaEvent Element -> Effect Unit
-runEvent renderer state ev = do
-  st <- read state
-  case ev of
+runEvent :: Renderer -> Ref PhaserState -> ManaEvent Element ContainerId -> Effect Unit
+runEvent renderer stateRef event = do
+  state <- read stateRef
+  case event of
     Destroy id -> do
-      case lookup id st.containerIndex of
+      case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
-    RenderScreen id parentId -> case lookup id st.screenIndex of
+    RenderScreen id parentId -> case lookup id state.screenIndex of
       Just screen -> do
-        mParent <- case lookup parentId st.containerIndex of
+        mParent <- case lookup parentId state.containerIndex of
           Just cont -> do
-            _ <- renderer state screen cont
+            _ <- renderer stateRef screen cont
             pure unit
           Nothing -> do
             pure unit
         pure unit
       Nothing -> do pure unit
-    RemoveChildren id -> case lookup id st.containerIndex of
+    RemoveChildren id -> case lookup id state.containerIndex of
       Just cont -> removeChildren cont
       Nothing -> do pure unit
-    RenderComponent id elem -> case lookup id st.containerIndex of --rename this to `renderComponent`
+    RenderComponent parentId elem -> case lookup parentId state.containerIndex of
       Just parent -> do
-        _ <- renderer state (elem) parent
+        _ <- renderer stateRef elem parent
         pure unit
       Nothing -> do pure unit

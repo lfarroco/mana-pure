@@ -5,16 +5,16 @@ import Data.Foldable (for_)
 import Data.Map (insert)
 import Effect (Effect)
 import Effect.Class.Console (log)
-import Effect.Ref (Ref, modify_, read)
+import Effect.Ref (modify_, read)
 import Game.Domain.Element (Element(..))
-import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Events (runEvent)
+import Game.Infrastructure.Renderer (Renderer)
 import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render :: Ref PhaserState -> Element -> PhaserContainer -> Effect PhaserContainer
+render :: Renderer
 render state element parentContainer = do
   st <- read state
   case element of
@@ -45,5 +45,7 @@ render state element parentContainer = do
           , config: { color: "#fff", fontSize: 18, fontFamily: "sans-serif" }
           }
       addToContainer_ parentContainer text_
+    Chara chara -> do
+      pure st.root
   where
   runEvent_ = runEvent render
