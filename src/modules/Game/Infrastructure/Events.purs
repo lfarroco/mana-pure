@@ -34,8 +34,18 @@ runEvent renderer stateRef event = do
         _ <- renderer stateRef elem parent
         pure unit
       Nothing -> do pure unit
-    TweenImage id -> case lookup id state.imageIndex of
+    TweenImage id to duration -> case lookup id state.imageIndex of
       Just img -> do
-        _ <- addTween state.scene img 0 0 0 500 "Cubic" (-1) true
+        _ <-
+          addTween
+            { scene: state.scene
+            , targets: img
+            , props: to
+            , delay: 0
+            , duration
+            , ease: "Cubic"
+            , repeat: -1
+            , yoyo: true
+            }
         pure unit
       Nothing -> pure unit

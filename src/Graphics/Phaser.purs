@@ -37,7 +37,18 @@ foreign import setImageDisplaySize :: PhaserImage -> Int -> Int -> Effect Phaser
 
 foreign import setImageOrigin :: PhaserImage -> Int -> Int -> Effect PhaserImage
 
-foreign import addTween :: PhaserScene -> PhaserImage -> Int -> Int -> Int -> Int -> String -> Int -> Boolean -> Effect PhaserImage
+foreign import addTween ::
+  forall targets props.
+  { scene :: PhaserScene
+  , targets :: targets
+  , props :: props
+  , delay :: Int
+  , duration :: Int
+  , ease :: String
+  , repeat :: Int
+  , yoyo :: Boolean
+  } ->
+  Effect PhaserImage
 
 foreign import delay_ :: PhaserScene -> Int -> EffectFnAff Unit
 

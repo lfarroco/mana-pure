@@ -89,35 +89,33 @@ exports.setImageOrigin = function (image) {
     };
   };
 };
-exports.addTween = function (scene) {
-  return function (targets) {
-    return function (delay) {
-      return function (x) {
-        return function (y) {
-          return function (duration) {
-            return function (ease) {
-              return function (repeat) {
-                return function (yoyo) {
-                  return function () {
-                    // use tween.setCallBack to define callback
-                    return scene.add.tween({
-                      targets,
-                      delay,
-                      duration,
-                      ease,
-                      repeat,
-                      yoyo,
-                      x,
-                      y,
-                    });
-                  };
-                };
-              };
-            };
-          };
-        };
-      };
+exports.addTween = function ({
+  scene,
+  targets,
+  props,
+  delay,
+  duration,
+  ease,
+  repeat,
+  yoyo,
+}) {
+  return function () {
+    // use tween.setCallBack to define callback
+    let p = {
+      targets,
+      delay,
+      duration,
+      ease,
+      repeat,
+      yoyo,
     };
+
+    // spread props into the parameter object
+    Object.keys(props).forEach((k) => {
+      p[k] = props[k];
+    });
+
+    return scene.add.tween(p);
   };
 };
 exports.delay_ = function (scene) {

@@ -1,5 +1,7 @@
 module Game.Domain.Events where
 
+import Core.Models (Vector)
+
 type ScreenId
   = String
 
@@ -12,4 +14,4 @@ data ManaEvent element containerId
   | RenderScreen ScreenId containerId
   | RemoveChildren containerId
   | RenderComponent containerId element -- parentId Element
-  | TweenImage String -- parentId Element
+  | TweenImage String Vector Int -- parentId Element
