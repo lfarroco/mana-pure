@@ -11,6 +11,7 @@ button id text pos size onClick =
     , pos
     , size
     , onClick
+    , onCreate: []
     , children:
         [ Rect
             { pos: { x: 0, y: 0 }

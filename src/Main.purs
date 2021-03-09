@@ -14,11 +14,11 @@ import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Assets (assets)
 import Game.Infrastructure.Events (runEvent)
+import Game.Infrastructure.Renderer (render)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.CharaTest (charaTest)
 import Screen.Infrastructure.MainScreen (mainScreen)
 import Screen.Infrastructure.UnitList (unitListScreen)
-import UI.RenderScreen (render)
 
 main :: Effect (Fiber Unit)
 main = do
@@ -48,4 +48,5 @@ initial game scene root =
         # insert "unitListScreen" (unitListScreen characterIndex)
         # insert "charaTest" charaTest
   , characterIndex
+  , imageIndex: empty
   }

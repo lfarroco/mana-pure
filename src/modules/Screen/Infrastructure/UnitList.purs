@@ -41,6 +41,7 @@ unitListScreen charaIndex =
     , pos: vec 0 0
     , size: size 800 600
     , onClick: []
+    , onCreate: []
     , children
     }
   where
@@ -58,6 +59,7 @@ unitListScreen charaIndex =
         , pos: vec 500 200
         , size: size 0 0
         , onClick: []
+        , onCreate: []
         , children:
             [ unitInfo "id1" "id1"
             ]

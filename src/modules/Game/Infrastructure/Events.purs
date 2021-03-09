@@ -6,7 +6,7 @@ import Data.Maybe (Maybe(..))
 import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (destroy, removeChildren)
+import Graphics.Phaser (addTween, destroy, removeChildren)
 
 runEvent :: EventRunner
 runEvent renderer stateRef event = do
@@ -34,3 +34,8 @@ runEvent renderer stateRef event = do
         _ <- renderer stateRef elem parent
         pure unit
       Nothing -> do pure unit
+    TweenImage id -> case lookup id state.imageIndex of
+      Just img -> do
+        _ <- addTween state.scene img 0 0 0 500 "Cubic" (-1) true
+        pure unit
+      Nothing -> pure unit

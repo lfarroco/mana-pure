@@ -12,3 +12,4 @@ data ManaEvent element containerId
   | RenderScreen ScreenId containerId
   | RemoveChildren containerId
   | RenderComponent containerId element -- parentId Element
+  | TweenImage String -- parentId Element

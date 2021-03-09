@@ -11,9 +11,10 @@ data Element
     , size :: Size
     , children :: Array Element
     , onClick :: Array (ManaEvent Element ContainerId)
+    , onCreate :: Array (ManaEvent Element ContainerId)
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
-  | Image { pos :: Vector, texture :: String }
+  | Image { pos :: Vector, texture :: String, id :: String }
   | Text { pos :: Vector, text :: String }
   | Chara
     { pos :: Vector
@@ -48,4 +49,5 @@ emptyContainer id =
     , size: size 0 0
     , children: []
     , onClick: []
+    , onCreate: []
     }

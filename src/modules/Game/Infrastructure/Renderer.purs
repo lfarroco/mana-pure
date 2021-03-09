@@ -28,9 +28,13 @@ render state element parentContainer = do
         s <- read state
         runEvent_ state
           # containerOnPointerUp container ev
+      for_ c.onCreate \ev -> do
+        s <- read state
+        runEvent_ state ev
       pure parentContainer
     Image i -> do
       img <- addImage st.scene i.pos.x i.pos.y i.texture
+      modify_ (\s -> s { imageIndex = insert i.id img s.imageIndex }) state
       addToContainer_ parentContainer img
     Rect r -> do
       rect <- solidColorRect st.scene r.pos r.size r.color
