@@ -3,15 +3,12 @@ module Game.Infrastructure.Events where
 import Prelude
 import Data.Map (lookup)
 import Data.Maybe (Maybe(..))
-import Effect (Effect)
-import Effect.Ref (Ref, read)
-import Game.Domain.Element (ContainerId, Element)
+import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
-import Game.Infrasctruture.PhaserState (PhaserState)
-import Game.Infrastructure.Renderer (Renderer)
+import Game.Infrastructure.Models (EventRunner)
 import Graphics.Phaser (destroy, removeChildren)
 
-runEvent :: Renderer -> Ref PhaserState -> ManaEvent Element ContainerId -> Effect Unit
+runEvent :: EventRunner
 runEvent renderer stateRef event = do
   state <- read stateRef
   case event of

@@ -8,7 +8,7 @@ import Effect.Class.Console (log)
 import Effect.Ref (modify_, read)
 import Game.Domain.Element (Element(..))
 import Game.Infrastructure.Events (runEvent)
-import Game.Infrastructure.Renderer (Renderer)
+import Game.Infrastructure.Models (Renderer)
 import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
