@@ -56,7 +56,6 @@ foreign import text ::
 delay :: PhaserScene -> Int -> Aff Unit
 delay a = fromEffectFnAff <<< delay_ a
 
--- replace with forall a...
 foreign import imageOnPointerUp :: PhaserImage -> (Unit -> Effect Unit) -> Effect Unit
 
 foreign import containerOnPointerUp ::

@@ -2,15 +2,14 @@ module UI.RenderScreen where
 
 import Prelude
 import Data.Foldable (for_)
-import Data.Map (insert, lookup)
-import Data.Maybe (Maybe(..))
+import Data.Map (insert)
 import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Element (Element(..))
-import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
-import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, removeChildren, setContainerSize, solidColorRect, text)
+import Game.Infrastructure.Events (runEvent)
+import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
@@ -27,7 +26,7 @@ render state element parentContainer = do
       for_ c.children (\e -> render state e container)
       for_ c.onClick \ev -> do
         s <- read state
-        runEvent state
+        runEvent_ state
           # containerOnPointerUp container ev
       pure parentContainer
     Image i -> do
@@ -46,30 +45,5 @@ render state element parentContainer = do
           , config: { color: "#fff", fontSize: 18, fontFamily: "sans-serif" }
           }
       addToContainer_ parentContainer text_
-
-runEvent :: Ref PhaserState -> ManaEvent Element -> Effect Unit
-runEvent state ev = do
-  st <- read state
-  case ev of
-    Destroy id -> do
-      case lookup id st.containerIndex of
-        Just s -> destroy s
-        Nothing -> pure unit
-    RenderScreen id parentId -> case lookup id st.screenIndex of
-      Just screen -> do
-        mParent <- case lookup parentId st.containerIndex of
-          Just cont -> do
-            _ <- render state screen cont
-            pure unit
-          Nothing -> do
-            pure unit
-        pure unit
-      Nothing -> do pure unit
-    RemoveChildren id -> case lookup id st.containerIndex of
-      Just cont -> removeChildren cont
-      Nothing -> do pure unit
-    RenderComponent id elem -> case lookup id st.containerIndex of --rename this to `renderComponent`
-      Just parent -> do
-        _ <- render state (elem) parent
-        pure unit
-      Nothing -> do pure unit
+  where
+  runEvent_ = runEvent render

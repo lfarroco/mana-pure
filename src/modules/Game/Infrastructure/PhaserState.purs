@@ -6,7 +6,7 @@ import Data.Map (Map)
 import Game.Domain.Element (Element)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene)
 
--- `State` applied with Phaser's bindings
+-- application of `State` with Phaser's bindings
 type PhaserState
   = State
       PhaserGame

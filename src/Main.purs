@@ -12,10 +12,11 @@ import Effect.Ref (modify_, new)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Assets (assets)
+import Game.Infrastructure.Events (runEvent)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.MainScreen (mainScreen)
 import Screen.Infrastructure.UnitList (unitListScreen)
-import UI.RenderScreen (runEvent)
+import UI.RenderScreen (render)
 
 initial :: PhaserGame -> PhaserScene -> PhaserContainer -> PhaserState
 initial game scene root =
@@ -38,5 +39,5 @@ main = do
     root <- addContainer scene (vec 0 0) # liftEffect
     state <- liftEffect $ new $ initial game scene root
     modify_ (\st -> st { containerIndex = insert "__root" root st.containerIndex }) state # liftEffect
-    runEvent state (RenderScreen "mainScreen" "__root") # liftEffect
+    runEvent render state (RenderScreen "mainScreen" "__root") # liftEffect
     log "Game started" # liftEffect
