@@ -11,6 +11,7 @@ import Effect.Class.Console (log)
 import Effect.Ref (modify_, new)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.ManaModels (ManaState)
+import Game.Infrastructure.Assets (assets)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.MainScreen (mainScreen)
 import Screen.Infrastructure.UnitList (unitListScreen)
@@ -32,9 +33,9 @@ initial game scene root =
 
 main :: Effect (Fiber Unit)
 main = do
-  game <- newGame 800 600
+  game <- newGame 640 360
   launchAff do
-    scene <- createScene game "main"
+    scene <- createScene { game, name: "main", assets }
     root <- addContainer scene (vec 0 0) # liftEffect
     state <- liftEffect $ new $ initial game scene root
     modify_ (\st -> st { containers = insert "__root" root st.containers }) state # liftEffect

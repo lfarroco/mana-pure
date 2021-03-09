@@ -14,27 +14,25 @@ exports.newGame = function (width) {
   };
 };
 
-exports.createScene_ = function (game) {
-  return function (name) {
-    return function (onError, onSuccess) {
-      game.scene.add(
-        name,
-        {
-          preload: function () {
-            ['backgrounds/sunset'].forEach((str) =>
-              this.load.image(str, 'assets/' + str + '.svg')
-            );
-          },
-          create: function () {
-            onSuccess(this);
-          },
+exports.createScene_ = function ({ game, name, assets }) {
+  return function (onError, onSuccess) {
+    game.scene.add(
+      name,
+      {
+        preload: function () {
+          assets.forEach((str) =>
+            this.load.image(str, 'assets/' + str + '.svg')
+          );
         },
-        true
-      );
-      return function (cancelError, cancelerError, cancelerSuccess) {
-        req.cancel(); // cancel the request
-        cancelerSuccess(); // invoke the success callback for the canceler
-      };
+        create: function () {
+          onSuccess(this);
+        },
+      },
+      true
+    );
+    return function (cancelError, cancelerError, cancelerSuccess) {
+      req.cancel(); // cancel the request
+      cancelerSuccess(); // invoke the success callback for the canceler
     };
   };
 };

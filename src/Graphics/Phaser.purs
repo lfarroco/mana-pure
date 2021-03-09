@@ -21,10 +21,10 @@ foreign import data PhaserGraphic :: Type
 
 foreign import newGame :: Int -> Int -> Effect PhaserGame
 
-foreign import createScene_ :: PhaserGame -> String -> EffectFnAff PhaserScene
+foreign import createScene_ :: { game :: PhaserGame, name :: String, assets :: Array String } -> EffectFnAff PhaserScene
 
-createScene :: PhaserGame -> String -> Aff PhaserScene
-createScene a = fromEffectFnAff <<< createScene_ a
+createScene :: { game :: PhaserGame, name :: String, assets :: Array String } -> Aff PhaserScene
+createScene param = fromEffectFnAff $ createScene_ param
 
 foreign import addContainer :: PhaserScene -> Vector -> Effect PhaserContainer
 
