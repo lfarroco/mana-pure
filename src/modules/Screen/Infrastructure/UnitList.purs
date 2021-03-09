@@ -6,7 +6,8 @@ import Core.Models (size, vec)
 import Data.Array (fromFoldable)
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Map (values)
-import Game.Domain.Events (Element(..), ManaEvent(..))
+import Game.Domain.Element (Element(..))
+import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 
 renderList :: CharacterIndex -> Array Element

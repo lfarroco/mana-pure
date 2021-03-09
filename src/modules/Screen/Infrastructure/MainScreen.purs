@@ -2,7 +2,8 @@ module Screen.Infrastructure.MainScreen where
 
 import Prelude
 import Core.Models (size, vec)
-import Game.Domain.Events (Element(..), ManaEvent(..))
+import Game.Domain.Element (Element(..))
+import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 
 mainScreen :: Element
@@ -13,8 +14,8 @@ mainScreen =
     , size: size 0 0
     , onClick: []
     , children:
-        [ Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } }
-        , button "startGameBtn" "go to unit list" pos sz
+        [ --Image { pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", size: { width: 200, height: 200 } } , 
+          button "startGameBtn" "go to unit list" pos sz
             $ [ Destroy "mainScreen"
               , RenderScreen "unitListScreen" "__root"
               ]

@@ -1,6 +1,6 @@
 module Test.UI.Button where
 
-import Game.Domain.Events (Element)
+import Game.Domain.Element (Element)
 import UI.Button (button)
 
 testButton :: Element

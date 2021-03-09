@@ -7,20 +7,10 @@ import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
-import Game.Domain.Events (Element(..), ManaEvent(..))
-import Graphics.Phaser
-  ( PhaserContainer
-  , addContainer
-  , addImage
-  , addToContainer
-  , containerOnPointerUp
-  , destroy
-  , removeChildren
-  , setContainerSize
-  , solidColorRect
-  , text
-  )
+import Game.Domain.Element (Element(..))
+import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
+import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, destroy, removeChildren, setContainerSize, solidColorRect, text)
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
@@ -57,7 +47,7 @@ render state element parentContainer = do
           }
       addToContainer_ parentContainer text_
 
-runEvent :: Ref PhaserState -> ManaEvent -> Effect Unit
+runEvent :: Ref PhaserState -> ManaEvent Element -> Effect Unit
 runEvent state ev = do
   st <- read state
   case ev of

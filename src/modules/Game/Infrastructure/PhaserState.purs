@@ -3,7 +3,7 @@ module Game.Infrasctruture.PhaserState where
 import Character.Application (CharacterIndex)
 import Core.Models (State)
 import Data.Map (Map)
-import Game.Domain.Events (Element)
+import Game.Domain.Element (Element)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene)
 
 -- `State` applied with Phaser's bindings
