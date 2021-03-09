@@ -8,7 +8,6 @@ import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Events (Element(..), ManaEvent(..))
-import Game.Infrasctruture.ManaModels (ManaState)
 import Graphics.Phaser
   ( PhaserContainer
   , addContainer
@@ -21,11 +20,12 @@ import Graphics.Phaser
   , solidColorRect
   , text
   )
+import Game.Infrasctruture.PhaserState (PhaserState)
 
 addToContainer_ :: forall t3. PhaserContainer -> t3 -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render :: Ref ManaState -> Element -> PhaserContainer -> Effect PhaserContainer
+render :: Ref PhaserState -> Element -> PhaserContainer -> Effect PhaserContainer
 render state element parentContainer = do
   st <- read state
   case element of
@@ -33,7 +33,7 @@ render state element parentContainer = do
       container <- addContainer st.scene c.pos
       _ <- addToContainer_ parentContainer container
       _ <- setContainerSize container c.size
-      modify_ (\s -> s { containers = insert c.id container s.containers }) state
+      modify_ (\s -> s { containerIndex = insert c.id container s.containerIndex }) state
       for_ c.children (\e -> render state e container)
       for_ c.onClick \ev -> do
         s <- read state
@@ -57,17 +57,17 @@ render state element parentContainer = do
           }
       addToContainer_ parentContainer text_
 
-runEvent :: Ref ManaState -> ManaEvent -> Effect Unit
+runEvent :: Ref PhaserState -> ManaEvent -> Effect Unit
 runEvent state ev = do
   st <- read state
   case ev of
     Destroy id -> do
-      case lookup id st.containers of
+      case lookup id st.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
     RenderScreen id parentId -> case lookup id st.screenIndex of
       Just screen -> do
-        mParent <- case lookup parentId st.containers of
+        mParent <- case lookup parentId st.containerIndex of
           Just cont -> do
             _ <- render state screen cont
             pure unit
@@ -75,10 +75,10 @@ runEvent state ev = do
             pure unit
         pure unit
       Nothing -> do pure unit
-    RemoveChildren id -> case lookup id st.containers of
+    RemoveChildren id -> case lookup id st.containerIndex of
       Just cont -> removeChildren cont
       Nothing -> do pure unit
-    RenderComponent id elem -> case lookup id st.containers of --rename this to `renderComponent`
+    RenderComponent id elem -> case lookup id st.containerIndex of --rename this to `renderComponent`
       Just parent -> do
         _ <- render state (elem) parent
         pure unit
