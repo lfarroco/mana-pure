@@ -2,12 +2,12 @@ module Core.BoundedNumber where
 
 import Prelude
 
-data BoundedNumber
+newtype BoundedNumber
   = BoundedNumber
-    { min :: Int
-    , max :: Int
-    , value :: Int
-    }
+  { min :: Int
+  , max :: Int
+  , value :: Int
+  }
 
 instance showBoundedNumber :: Show BoundedNumber where
   show (BoundedNumber n) = show n

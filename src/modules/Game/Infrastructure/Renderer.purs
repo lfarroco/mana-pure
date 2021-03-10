@@ -49,7 +49,5 @@ render state element parentContainer = do
           , config: { color: "#fff", fontSize: 18, fontFamily: "sans-serif" }
           }
       addToContainer_ parentContainer text_
-    Chara chara -> do
-      pure st.root
   where
   runEvent_ = runEvent render

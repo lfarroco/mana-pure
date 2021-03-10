@@ -2,6 +2,7 @@ module Character.Application where
 
 import Character.Domain
 import Data.Map (Map)
+import Job.Domain (fighter)
 
 type CharacterIndex
   = Map String Character
@@ -10,8 +11,7 @@ createCharacter :: String -> Character
 createCharacter s =
   { id: s
   , name: s
-  , job: "fighter"
+  , job: fighter
   , age: 22
-  , str: 11
-  , hp: 33
+  , hp: createHitPoints 20
   }

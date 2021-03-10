@@ -8,10 +8,9 @@ type ScreenId
 type ParentId
   = String
 
--- an event that is capable of producing elements of a given type
 data ManaEvent element containerId
   = Destroy containerId
   | RenderScreen ScreenId containerId
   | RemoveChildren containerId
-  | RenderComponent containerId element -- parentId Element
-  | TweenImage String Vector Int -- parentId Element
+  | RenderComponent containerId element
+  | TweenImage String Vector Int

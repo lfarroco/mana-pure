@@ -16,20 +16,6 @@ data Element
   | Rect { pos :: Vector, size :: Size, color :: String }
   | Image { pos :: Vector, texture :: String, id :: String }
   | Text { pos :: Vector, text :: String }
-  | Chara
-    { pos :: Vector
-    , id :: String
-    , hairStyle :: String
-    , hairColor :: String
-    , skinColor :: String
-    , hat :: String
-    , head :: String
-    , leftHand :: String
-    , rightHand :: String
-    , trunk :: String
-    , leftFoot :: String
-    , rightFoot :: String
-    }
 
 newtype ContainerId
   = ContainerId String
