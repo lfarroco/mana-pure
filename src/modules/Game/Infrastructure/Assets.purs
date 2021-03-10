@@ -8,4 +8,5 @@ assets =
   , "chara/trunk_fighter"
   , "chara/hand"
   , "chara/foot"
+  , "chara/hair/male1"
   ]

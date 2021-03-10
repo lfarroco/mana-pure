@@ -25,18 +25,19 @@ chara :: String -> Element
 chara id =
   let
     images =
-      [ { id: "chara/lhand/" <> id, texture: "chara/hand", pos: vec 125 130, target: Just $ vec 125 120, duration: 500 }
+      [ { id: "chara/lhand/" <> id, texture: "chara/hand", pos: vec 125 130, target: Just $ vec 125 120, duration: 1000 }
       , { id: "chara/lfoot/" <> id, texture: "chara/foot", pos: vec 120 172, target: Nothing, duration: 0 }
       , { id: "chara/rfoot/" <> id, texture: "chara/foot", pos: vec 90 180, target: Nothing, duration: 0 }
-      , { id: "chara/trunk/" <> id, texture: "chara/trunk_fighter", pos: vec 100 140, target: Just $ vec 100 137, duration: 500 }
-      , { id: "chara/head/" <> id, texture: "chara/head_male", pos: vec 100 70, target: Just $ vec 100 67, duration: 500 }
-      , { id: "chara/rhand/" <> id, texture: "chara/hand", pos: vec 80 140, target: Just $ vec 80 135, duration: 500 }
+      , { id: "chara/trunk/" <> id, texture: "chara/trunk_fighter", pos: vec 100 140, target: Just $ vec 100 137, duration: 1000 }
+      , { id: "chara/head/" <> id, texture: "chara/head_male", pos: vec 100 70, target: Just $ vec 100 67, duration: 1000 }
+      , { id: "chara/rhand/" <> id, texture: "chara/hand", pos: vec 80 140, target: Just $ vec 80 135, duration: 1000 }
+      , { id: "chara/hair/" <> id, texture: "chara/hair/male1", pos: vec 100 70, target: Just $ vec 100 67, duration: 1000 }
       ]
 
     standAnimation =
       mapMaybe
-        ( \{ id, target, duration } -> case target of
-            Just t -> Just $ TweenImage id t duration
+        ( \{ id: id_, target, duration } -> case target of
+            Just t -> Just $ TweenImage id_ t duration
             Nothing -> Nothing
         )
         images
@@ -49,8 +50,8 @@ chara id =
       , onCreate: standAnimation
       , children:
           map
-            ( \{ id, pos, texture } ->
-                Image { id, pos, texture }
+            ( \{ id: id_, pos, texture } ->
+                Image { id: id_, pos, texture }
             )
             images
       }
