@@ -27,8 +27,7 @@ render state element parentContainer = do
       for_ c.children (\e -> render state e container)
       for_ c.onClick \ev -> do
         s <- read state
-        runEvent_ state
-          # containerOnPointerUp container ev
+        containerOnPointerUp container (\v -> ev v) (runEvent_ state)
       for_ c.onCreate \ev -> do
         s <- read state
         runEvent_ state ev

@@ -150,7 +150,8 @@ exports.imageOnPointerUp = function (image) {
   return function (listener) {
     return function () {
       image.setInteractive();
-      image.on('pointerup', function () {
+      image.on('pointerup', function (e) {
+        console.log(`>>>`, e);
         listener()();
       });
     };
@@ -170,8 +171,8 @@ exports.containerOnPointerUp = function (container) {
           Phaser.Geom.Rectangle.Contains
         );
 
-        container.on('pointerup', function () {
-          listener(event)();
+        container.on('pointerup', function (e) {
+          listener(event(e.position))();
         });
 
         return {};
@@ -227,5 +228,20 @@ exports.setTint = function ({ image, color }) {
 exports.clearTint = function (image) {
   return function () {
     image.clearTint();
+  };
+};
+
+exports.onUpdate = function ({ scene, callback }) {
+  return function () {
+    scene.events.on('update', function (time, delta) {
+      callback(time)(delta)();
+    });
+  };
+};
+exports.removeOnUpdate = function (scene) {
+  return function () {
+    return function () {
+      scene.events.update.removeAll();
+    };
   };
 };

@@ -4,7 +4,7 @@ import Core.Models (Size, Vector)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent)
 
-button :: String -> String -> Vector -> Size -> Array (ManaEvent Element ContainerId) -> Element
+button :: String -> String -> Vector -> Size -> Array (Vector -> ManaEvent Element ContainerId) -> Element
 button id text pos size onClick =
   Container
     { id: createContainerId id

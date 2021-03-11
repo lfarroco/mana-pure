@@ -11,7 +11,7 @@ data Element
     , pos :: Vector
     , size :: Size
     , children :: Array Element
-    , onClick :: Array (ManaEvent Element ContainerId)
+    , onClick :: Array (Vector -> ManaEvent Element ContainerId)
     , onCreate :: Array (ManaEvent Element ContainerId)
     }
   | Rect { pos :: Vector, size :: Size, color :: String }

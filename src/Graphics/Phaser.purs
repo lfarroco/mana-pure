@@ -67,11 +67,10 @@ foreign import text ::
 delay :: PhaserScene -> Int -> Aff Unit
 delay a = fromEffectFnAff <<< delay_ a
 
-foreign import imageOnPointerUp :: PhaserImage -> (Unit -> Effect Unit) -> Effect Unit
+foreign import imageOnPointerUp :: PhaserImage -> (Vector -> Effect Unit) -> Effect Unit
 
 foreign import containerOnPointerUp ::
-  PhaserContainer ->
-  (ManaEvent Element ContainerId) -> ((ManaEvent Element ContainerId) -> Effect Unit) -> Effect Unit
+  PhaserContainer -> (Vector -> ManaEvent Element ContainerId) -> ((ManaEvent Element ContainerId) -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 
@@ -98,3 +97,7 @@ foreign import addToContainer ::
 foreign import setTint :: { image :: PhaserImage, color :: String } -> Effect Unit
 
 foreign import clearTint :: PhaserImage -> Effect Unit
+
+foreign import onUpdate :: { scene :: PhaserScene, callback :: Int -> Int -> Effect Unit } -> Effect Unit
+
+foreign import removeOnUpdate :: PhaserScene -> Effect Unit

@@ -3,16 +3,18 @@ module Game.Infrastructure.Events where
 import Prelude
 import Data.Map (lookup)
 import Data.Maybe (Maybe(..))
+import Effect.Class.Console (log)
 import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (addTween, destroy, removeChildren)
+import Graphics.Phaser (addTween, destroy, onUpdate, removeChildren, removeOnUpdate)
 
 runEvent :: EventRunner
 runEvent renderer stateRef event = do
   state <- read stateRef
   case event of
     Destroy id -> do
+      log $ "destroying "
       case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
@@ -49,3 +51,7 @@ runEvent renderer stateRef event = do
             }
         pure unit
       Nothing -> pure unit
+    OnUpdate callback -> do
+      log "adding callback"
+      onUpdate { callback, scene: state.scene }
+    RemoveOnUpdate -> do removeOnUpdate state.scene

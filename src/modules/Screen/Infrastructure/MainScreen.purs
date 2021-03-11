@@ -18,12 +18,16 @@ mainScreen =
     , children:
         [ Image { id: "mainScreenBg", pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", tint: Nothing }
         , button "startGameBtn" "go to unit list" pos sz
-            [ Destroy $ createContainerId "mainScreen"
-            , RenderScreen "unitListScreen" $ createContainerId "__root"
+            [ \_ -> Destroy $ createContainerId "mainScreen"
+            , \_ -> RenderScreen "unitListScreen" $ createContainerId "__root"
             ]
         , button "charatest" "chara test" (vec 300 200) sz
-            [ Destroy $ createContainerId "mainScreen"
-            , RenderScreen "charaTest" $ createContainerId "__root"
+            [ \_ -> Destroy $ createContainerId "mainScreen"
+            , \_ -> RenderScreen "charaTest" $ createContainerId "__root"
+            ]
+        , button "mapTeste" "map test" (vec 500 200) sz
+            [ \_ -> Destroy $ createContainerId "mainScreen"
+            , \_ -> RenderScreen "mapScreen" $ createContainerId "__root"
             ]
         ]
     }

@@ -7,7 +7,6 @@ import Data.Map (empty, insert)
 import Effect (Effect)
 import Effect.Aff (Fiber, launchAff)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (log)
 import Effect.Ref (new)
 import Game.Domain.Element (createContainerId)
 import Game.Domain.Events (ManaEvent(..))
@@ -17,6 +16,7 @@ import Game.Infrastructure.Events (runEvent)
 import Game.Infrastructure.Renderer (render)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, createScene, newGame)
 import Screen.Infrastructure.CharaTest (charaTest)
+import Screen.Infrastructure.MapScreen (mapScreen)
 import Screen.Infrastructure.MainScreen (mainScreen)
 import Screen.Infrastructure.UnitList (unitListScreen)
 
@@ -28,7 +28,6 @@ main = do
     root <- createRootContainer scene
     state <- createInitialState game scene root
     runEvent render state (RenderScreen "mainScreen" $ createContainerId "__root") # liftEffect
-    log "Game started" # liftEffect
   where
   createRootContainer scene = addContainer scene (vec 0 0) # liftEffect
 
@@ -47,6 +46,7 @@ initial game scene root =
         # insert "mainScreen" mainScreen
         # insert "unitListScreen" (unitListScreen characterIndex)
         # insert "charaTest" charaTest
+        # insert "mapScreen" (mapScreen scene)
   , characterIndex
   , imageIndex: empty
   }

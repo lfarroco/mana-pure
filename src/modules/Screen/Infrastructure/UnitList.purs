@@ -21,8 +21,8 @@ renderList index =
               (v.name)
               (vec 300 (100 + (i * 60)))
               (size 200 50)
-              [ RemoveChildren $ createContainerId "unitInfoWrapper"
-              , RenderComponent (createContainerId "unitInfoWrapper") (unitInfo v.id v.name)
+              [ \_ -> RemoveChildren $ createContainerId "unitInfoWrapper"
+              , \_ -> RenderComponent (createContainerId "unitInfoWrapper") (unitInfo v.id v.name)
               ]
         )
     # fromFoldable
@@ -51,8 +51,8 @@ unitListScreen charaIndex =
 
   children =
     [ button "unitListBtn" "go back" pos sz
-        $ [ Destroy $ createContainerId "unitListScreen"
-          , RenderScreen "mainScreen" $ createContainerId "__root"
+        $ [ \_ -> Destroy $ createContainerId "unitListScreen"
+          , \_ -> RenderScreen "mainScreen" $ createContainerId "__root"
           ]
     , Container
         { id: createContainerId "unitInfoWrapper"
