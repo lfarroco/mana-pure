@@ -3,13 +3,14 @@ module Game.Infrastructure.Renderer where
 import Prelude
 import Data.Foldable (for_)
 import Data.Map (insert)
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (modify_, read)
 import Game.Domain.Element (Element(..))
 import Game.Infrastructure.Events (runEvent)
 import Game.Infrastructure.Models (Renderer)
-import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, solidColorRect, text)
+import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, setTint, solidColorRect, text)
 
 addToContainer_ :: forall element. PhaserContainer -> element -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
@@ -33,9 +34,12 @@ render state element parentContainer = do
         runEvent_ state ev
       pure parentContainer
     Image i -> do
-      img <- addImage st.scene i.pos.x i.pos.y i.texture
-      modify_ (\s -> s { imageIndex = insert i.id img s.imageIndex }) state
-      addToContainer_ parentContainer img
+      image <- addImage st.scene i.pos.x i.pos.y i.texture
+      modify_ (\s -> s { imageIndex = insert i.id image s.imageIndex }) state
+      _ <- case i.tint of
+        Just color -> setTint { color, image }
+        Nothing -> pure unit
+      addToContainer_ parentContainer image
     Rect r -> do
       rect <- solidColorRect st.scene r.pos r.size r.color
       addToContainer_ parentContainer rect

@@ -94,3 +94,7 @@ foreign import addToContainer ::
   , container :: PhaserContainer
   } ->
   Effect PhaserContainer
+
+foreign import setTint :: { image :: PhaserImage, color :: String } -> Effect Unit
+
+foreign import clearTint :: PhaserImage -> Effect Unit

@@ -2,6 +2,7 @@ module Game.Domain.Element where
 
 import Prelude
 import Core.Models (Size, Vector, size, vec)
+import Data.Maybe (Maybe)
 import Game.Domain.Events (ManaEvent)
 
 data Element
@@ -14,7 +15,7 @@ data Element
     , onCreate :: Array (ManaEvent Element ContainerId)
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
-  | Image { pos :: Vector, texture :: String, id :: String }
+  | Image { pos :: Vector, texture :: String, id :: String, tint :: Maybe String }
   | Text { pos :: Vector, text :: String }
 
 newtype ContainerId

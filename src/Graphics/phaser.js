@@ -219,3 +219,13 @@ exports.destroy = function (element) {
     element.destroy();
   };
 };
+exports.setTint = function ({ image, color }) {
+  return function () {
+    image.setTint(color);
+  };
+};
+exports.clearTint = function (image) {
+  return function () {
+    image.clearTint();
+  };
+};

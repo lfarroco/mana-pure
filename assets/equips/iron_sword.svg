@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="300"
+   height="300"
+   viewBox="0 0 79.374996 79.375002"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="iron_sword.svg"
+   inkscape:version="1.1-alpha (c0348e27, 2021-02-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1006">
+      <stop
+         style="stop-color:#faf7ee;stop-opacity:1"
+         offset="0"
+         id="stop1002" />
+      <stop
+         style="stop-color:#a2d4e9;stop-opacity:1"
+         offset="1"
+         id="stop1004" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient996">
+      <stop
+         style="stop-color:#e8b46d;stop-opacity:1"
+         offset="0"
+         id="stop992" />
+      <stop
+         style="stop-color:#b07451;stop-opacity:1"
+         offset="1"
+         id="stop994" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient996"
+       id="linearGradient998"
+       x1="46.987164"
+       y1="215.45163"
+       x2="49.632999"
+       y2="217.86122"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(8.9353321,0,0,8.9353321,-327.27475,-1662.2679)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1006"
+       id="linearGradient1008"
+       x1="38.411831"
+       y1="208.83704"
+       x2="37.041668"
+       y2="210.56155"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(8.9353321,0,0,8.9353321,-286.32448,-1648.5474)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="9.307132"
+     inkscape:cx="125.1191"
+     inkscape:cy="133.28488"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g186"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1680"
+     inkscape:window-height="925"
+     inkscape:window-x="0"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     objecttolerance="10.0"
+     gridtolerance="10.0"
+     guidetolerance="10.0"
+     inkscape:pagecheckerboard="0"
+     width="100px" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-164.70832)">
+    <g
+       id="g186"
+       transform="matrix(0.19126589,0,0,0.19126589,20.754507,152.49466)">
+      <path
+         style="fill:url(#linearGradient998);fill-opacity:1;stroke:#000000;stroke-width:2.36414px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 72.307116,278.06186 4.929962,4.92997 20.40012,-8.65199 7.612982,-3.94679 3.61753,-5.68133 9.16473,-18.37104 -5.71184,-4.4754 -25.416181,13.99072 z"
+         id="path990"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccccc" />
+      <path
+         style="fill:url(#linearGradient1008);fill-opacity:1;stroke:#000000;stroke-width:2.36414px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 99.32587,252.52075 -65.647108,-64.59173 -14.564787,0.42264 0.633248,16.67566 63.325166,63.11409 12.313923,-4.66897 z"
+         id="path1000"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccc" />
+    </g>
+  </g>
+</svg>

@@ -2,6 +2,7 @@ module Screen.Infrastructure.MainScreen where
 
 import Prelude
 import Core.Models (size, vec)
+import Data.Maybe (Maybe(..))
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
@@ -15,7 +16,7 @@ mainScreen =
     , onClick: []
     , onCreate: []
     , children:
-        [ Image { id: "mainScreenBg", pos: { x: 500, y: 100 }, texture: "backgrounds/sunset" }
+        [ Image { id: "mainScreenBg", pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", tint: Nothing }
         , button "startGameBtn" "go to unit list" pos sz
             [ Destroy $ createContainerId "mainScreen"
             , RenderScreen "unitListScreen" $ createContainerId "__root"
