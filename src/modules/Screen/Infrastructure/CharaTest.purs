@@ -9,7 +9,8 @@ import Data.Maybe (Maybe(..))
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 
-charaTest :: Element
+
+charaTest :: forall a. Element a
 charaTest =
   Container
     { id: createContainerId "charaTest"
@@ -28,7 +29,7 @@ charaTest =
 -- export const SKIN_COLOR_MED = 0xc37c4d;
 -- export const SKIN_COLOR_DARK_MED = 0xb66b3e;
 -- export const SKIN_COLOR_BLACK  = 0x8e4b33;
-chara :: String -> Element
+chara :: forall a. String -> Element a
 chara id =
   let
     skinColor = "0xecccab"

@@ -9,17 +9,10 @@ vec :: Int -> Int -> Vector
 vec x y = { x: toNumber (x), y: toNumber (y) }
 
 type Size
-  = { width :: Int, height :: Int }
+  = { width :: Number, height :: Number }
 
 size :: Int -> Int -> Size
-size width height = { width, height }
+size width height = { width: toNumber width, height: toNumber height }
 
-type State game scene root cont screenIndex characterIndex imageIndex
-  = { game :: game
-    , root :: root
-    , scene :: scene
-    , containerIndex :: cont
-    , screenIndex :: screenIndex
-    , characterIndex :: characterIndex
-    , imageIndex :: imageIndex
-    }
+type State state
+  = state

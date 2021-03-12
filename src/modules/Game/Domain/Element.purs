@@ -3,16 +3,17 @@ module Game.Domain.Element where
 import Prelude
 import Core.Models (Size, Vector, size, vec)
 import Data.Maybe (Maybe)
+import Effect.Ref (Ref)
 import Game.Domain.Events (ManaEvent)
 
-data Element
+data Element gameState
   = Container
     { id :: ContainerId
     , pos :: Vector
     , size :: Size
-    , children :: Array Element
-    , onClick :: Array (Vector -> ManaEvent Element ContainerId)
-    , onCreate :: Array (ManaEvent Element ContainerId)
+    , children :: Array (Element gameState)
+    , onClick :: Array (Ref gameState -> Vector -> ManaEvent (Element gameState) ContainerId)
+    , onCreate :: Array (ManaEvent (Element gameState) ContainerId)
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
   | Image { pos :: Vector, texture :: String, id :: String, tint :: Maybe String }
@@ -28,7 +29,7 @@ derive instance ordContainerId :: Ord ContainerId
 createContainerId :: String -> ContainerId
 createContainerId id = ContainerId id
 
-emptyContainer :: String -> Element
+emptyContainer :: forall gameState. String -> Element gameState
 emptyContainer id =
   Container
     { id: createContainerId id

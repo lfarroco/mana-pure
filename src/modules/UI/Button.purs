@@ -1,10 +1,23 @@
 module UI.Button where
 
-import Core.Models (Size, Vector, vec)
+import Core.Models (Vector, Size, vec)
+import Effect.Ref (Ref)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent)
 
-button :: String -> String -> Vector -> Size -> Array (Vector -> ManaEvent Element ContainerId) -> Element
+-- this is terrible :cry: what about a pipe?
+button ::
+  forall state.
+  String ->
+  String ->
+  Vector ->
+  Size ->
+  Array
+    ( Ref state ->
+      Vector ->
+      ManaEvent (Element state) ContainerId
+    ) ->
+  Element state
 button id text pos size onClick =
   Container
     { id: createContainerId id

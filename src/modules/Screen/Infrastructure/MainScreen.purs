@@ -7,7 +7,7 @@ import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import UI.Button (button)
 
-mainScreen :: Element
+mainScreen :: forall a. Element a
 mainScreen =
   Container
     { id: createContainerId "mainScreen"
@@ -18,16 +18,16 @@ mainScreen =
     , children:
         [ Image { id: "mainScreenBg", pos: vec 500 100, texture: "backgrounds/sunset", tint: Nothing }
         , button "startGameBtn" "go to unit list" pos sz
-            [ \_ -> Destroy $ createContainerId "mainScreen"
-            , \_ -> RenderScreen "unitListScreen" $ createContainerId "__root"
+            [ \state vector -> Destroy $ createContainerId "mainScreen"
+            , \state vector -> RenderScreen "unitListScreen" $ createContainerId "__root"
             ]
-        , button "charatest" "chara test" (vec 300 200) sz
-            [ \_ -> Destroy $ createContainerId "mainScreen"
-            , \_ -> RenderScreen "charaTest" $ createContainerId "__root"
+        , button "charaTestBtn" "chara test" (vec 300 200) sz
+            [ \state vector -> Destroy $ createContainerId "mainScreen"
+            , \state vector -> RenderScreen "charaTest" $ createContainerId "__root"
             ]
-        , button "mapTeste" "map test" (vec 500 200) sz
-            [ \_ -> Destroy $ createContainerId "mainScreen"
-            , \_ -> RenderScreen "mapScreen" $ createContainerId "__root"
+        , button "mapTestBtn" "map test" (vec 500 200) sz
+            [ \state vector -> Destroy $ createContainerId "mainScreen"
+            , \state vector -> RenderScreen "mapScreen" $ createContainerId "__root"
             ]
         ]
     }

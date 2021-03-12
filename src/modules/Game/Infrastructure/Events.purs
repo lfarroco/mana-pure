@@ -8,11 +8,13 @@ import Data.Maybe (Maybe(..))
 import Effect.Class.Console (log)
 import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
+import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
 import Graphics.Phaser (addTween, destroy, onUpdate, removeChildren, removeOnUpdate)
 import Math (pow)
+import Screen.Infrastructure.Screens (screenIndex)
 
-runEvent :: EventRunner
+runEvent :: EventRunner PhaserState
 runEvent renderer stateRef event = do
   state <- read stateRef
   case event of
@@ -21,7 +23,7 @@ runEvent renderer stateRef event = do
       case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
-    RenderScreen id parentId -> case lookup id state.screenIndex of
+    RenderScreen id parentId -> case lookup id screenIndex of
       Just screen -> do
         mParent <- case lookup parentId state.containerIndex of
           Just cont -> do

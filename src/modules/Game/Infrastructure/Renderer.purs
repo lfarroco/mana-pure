@@ -8,6 +8,7 @@ import Effect (Effect)
 import Effect.Class.Console (log)
 import Effect.Ref (modify_, read)
 import Game.Domain.Element (Element(..))
+import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Events (runEvent)
 import Game.Infrastructure.Models (Renderer)
 import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer, containerOnPointerUp, setContainerSize, setTint, solidColorRect, text)
@@ -15,7 +16,7 @@ import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer,
 addToContainer_ :: forall element. PhaserContainer -> element -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
-render :: Renderer
+render :: Renderer PhaserState
 render state element parentContainer = do
   st <- read state
   case element of
@@ -27,7 +28,7 @@ render state element parentContainer = do
       for_ c.children (\e -> render state e container)
       for_ c.onClick \ev -> do
         s <- read state
-        containerOnPointerUp container (\v -> ev v) (runEvent_ state)
+        containerOnPointerUp container (\v -> ev state v) (runEvent_ state)
       for_ c.onCreate \ev -> do
         s <- read state
         runEvent_ state ev

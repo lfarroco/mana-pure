@@ -1,6 +1,7 @@
 module Graphics.Phaser where
 
 import Prelude
+
 import Core.Models (Vector, Size)
 import Effect (Effect)
 import Effect.Aff (Aff)
@@ -69,8 +70,8 @@ delay a = fromEffectFnAff <<< delay_ a
 
 foreign import imageOnPointerUp :: PhaserImage -> (Vector -> Effect Unit) -> Effect Unit
 
-foreign import containerOnPointerUp ::
-  PhaserContainer -> (Vector -> ManaEvent Element ContainerId) -> ((ManaEvent Element ContainerId) -> Effect Unit) -> Effect Unit
+foreign import containerOnPointerUp :: forall gameState.
+  PhaserContainer -> (Vector -> ManaEvent (Element gameState ) ContainerId) -> ((ManaEvent (Element gameState) ContainerId) -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 
