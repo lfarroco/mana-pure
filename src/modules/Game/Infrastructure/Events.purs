@@ -57,8 +57,7 @@ runEvent renderer stateRef event = do
         pure unit
       Nothing -> pure unit
     OnUpdate callback -> do
-      log "adding callback"
-      onUpdate { callback, scene: state.scene }
+      onUpdate { callback: callback state, scene: state.scene }
     RemoveOnUpdate -> do removeOnUpdate state.scene
     MoveChara charaId fromRef toVec -> case lookup charaId state.imageIndex of
       Just img -> do

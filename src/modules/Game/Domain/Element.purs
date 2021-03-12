@@ -12,8 +12,8 @@ data Element gameState
     , pos :: Vector
     , size :: Size
     , children :: Array (Element gameState)
-    , onClick :: Array (Ref gameState -> Vector -> ManaEvent (Element gameState) ContainerId)
-    , onCreate :: Array (ManaEvent (Element gameState) ContainerId)
+    , onClick :: Array (Ref gameState -> Vector -> ManaEvent (Element gameState) ContainerId gameState)
+    , onCreate :: Array (ManaEvent (Element gameState) ContainerId gameState)
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
   | Image { pos :: Vector, texture :: String, id :: String, tint :: Maybe String }

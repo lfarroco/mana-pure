@@ -71,7 +71,7 @@ delay a = fromEffectFnAff <<< delay_ a
 foreign import imageOnPointerUp :: PhaserImage -> (Vector -> Effect Unit) -> Effect Unit
 
 foreign import containerOnPointerUp :: forall gameState.
-  PhaserContainer -> (Vector -> ManaEvent (Element gameState ) ContainerId) -> ((ManaEvent (Element gameState) ContainerId) -> Effect Unit) -> Effect Unit
+  PhaserContainer -> (Vector -> ManaEvent (Element gameState ) ContainerId gameState) -> ((ManaEvent (Element gameState) ContainerId gameState) -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 

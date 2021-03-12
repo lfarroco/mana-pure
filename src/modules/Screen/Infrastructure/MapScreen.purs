@@ -22,7 +22,7 @@ mapScreen =
             TweenImage "chara" vector 1000.0
         ]
     , onCreate:
-        [ OnUpdate \time delta -> do pure unit
+        [ OnUpdate \state time delta -> do pure unit
         ]
     , children:
         [ Text { pos: vec 200 200, text: "brrrrrrrrr" }

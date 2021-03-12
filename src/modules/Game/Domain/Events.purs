@@ -18,13 +18,13 @@ type Time = Number
 -- difference in ms since the previous frame
 type Delta = Number
 
-data ManaEvent element containerId
+data ManaEvent element containerId st
   = Destroy containerId
   | RenderScreen ScreenId containerId
   | RemoveChildren containerId
   | RenderComponent containerId element
   | TweenImage String Vector Number
-  | OnUpdate (Time -> Delta -> Effect Unit)
+  | OnUpdate (st -> Time -> Delta -> Effect Unit)
   | RemoveOnUpdate
   -- map events
   | MoveChara String (Ref Vector) Vector

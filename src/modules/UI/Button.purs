@@ -15,7 +15,7 @@ button ::
   Array
     ( Ref state ->
       Vector ->
-      ManaEvent (Element state) ContainerId
+      ManaEvent (Element state) ContainerId state
     ) ->
   Element state
 button id text pos size onClick =

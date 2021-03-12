@@ -8,7 +8,7 @@ import Game.Domain.Events (ManaEvent)
 import Graphics.Phaser (PhaserContainer)
 
 type EventRunner gameState
-  = Renderer gameState -> Ref gameState -> ManaEvent (Element gameState) ContainerId -> Effect Unit
+  = Renderer gameState -> Ref gameState -> ManaEvent (Element gameState) ContainerId gameState -> Effect Unit
 
 type Renderer gameState
   = Ref gameState -> Element gameState -> PhaserContainer -> Effect PhaserContainer
