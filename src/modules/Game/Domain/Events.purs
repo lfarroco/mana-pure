@@ -1,8 +1,10 @@
 module Game.Domain.Events where
 
 import Prelude
+
 import Core.Models (Vector)
 import Effect (Effect)
+import Effect.Ref (Ref)
 
 type ScreenId
   = String
@@ -10,11 +12,19 @@ type ScreenId
 type ParentId
   = String
 
+-- time in ms since the loop has started
+type Time = Number
+
+-- difference in ms since the previous frame
+type Delta = Number
+
 data ManaEvent element containerId
   = Destroy containerId
   | RenderScreen ScreenId containerId
   | RemoveChildren containerId
   | RenderComponent containerId element
-  | TweenImage String Vector Int
-  | OnUpdate (Int -> Int -> Effect Unit)
+  | TweenImage String Vector Number
+  | OnUpdate (Time -> Delta -> Effect Unit)
   | RemoveOnUpdate
+  -- map events
+  | MoveChara String (Ref Vector) Vector

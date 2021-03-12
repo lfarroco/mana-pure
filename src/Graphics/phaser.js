@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 exports.newGame = function (width) {
   return function (height) {
@@ -21,7 +21,7 @@ exports.createScene_ = function ({ game, name, assets }) {
       {
         preload: function () {
           assets.forEach((str) =>
-            this.load.image(str, 'assets/' + str + '.svg')
+            this.load.image(str, "assets/" + str + ".svg")
           );
         },
         create: function () {
@@ -118,6 +118,7 @@ exports.addTween = function ({
     return scene.add.tween(p);
   };
 };
+
 exports.delay_ = function (scene) {
   return function (delay) {
     return function (onError, onSuccess) {
@@ -150,7 +151,7 @@ exports.imageOnPointerUp = function (image) {
   return function (listener) {
     return function () {
       image.setInteractive();
-      image.on('pointerup', function (e) {
+      image.on("pointerup", function (e) {
         console.log(`>>>`, e);
         listener()();
       });
@@ -171,7 +172,7 @@ exports.containerOnPointerUp = function (container) {
           Phaser.Geom.Rectangle.Contains
         );
 
-        container.on('pointerup', function (e) {
+        container.on("pointerup", function (e) {
           listener(event(e.position))();
         });
 
@@ -233,7 +234,7 @@ exports.clearTint = function (image) {
 
 exports.onUpdate = function ({ scene, callback }) {
   return function () {
-    scene.events.on('update', function (time, delta) {
+    scene.events.on("update", function (time, delta) {
       callback(time)(delta)();
     });
   };

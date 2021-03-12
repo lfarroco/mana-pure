@@ -16,7 +16,7 @@ mainScreen =
     , onClick: []
     , onCreate: []
     , children:
-        [ Image { id: "mainScreenBg", pos: { x: 500, y: 100 }, texture: "backgrounds/sunset", tint: Nothing }
+        [ Image { id: "mainScreenBg", pos: vec 500 100, texture: "backgrounds/sunset", tint: Nothing }
         , button "startGameBtn" "go to unit list" pos sz
             [ \_ -> Destroy $ createContainerId "mainScreen"
             , \_ -> RenderScreen "unitListScreen" $ createContainerId "__root"

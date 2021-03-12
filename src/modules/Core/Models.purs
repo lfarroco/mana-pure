@@ -1,10 +1,12 @@
 module Core.Models where
 
+import Data.Int (toNumber)
+
 type Vector
-  = { x :: Int, y :: Int }
+  = { x :: Number, y :: Number }
 
 vec :: Int -> Int -> Vector
-vec x y = { x, y }
+vec x y = { x: toNumber (x), y: toNumber (y) }
 
 type Size
   = { width :: Int, height :: Int }

@@ -1,8 +1,10 @@
 module Screen.Infrastructure.CharaTest where
 
 import Prelude
+
 import Core.Models (size, vec)
 import Data.Array (mapMaybe)
+import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
@@ -48,7 +50,7 @@ chara id =
     standAnimation =
       mapMaybe
         ( \{ id: id_, target, duration } -> case target of
-            Just t -> Just $ TweenImage id_ t duration
+            Just t -> Just $ TweenImage id_ t (toNumber duration)
             Nothing -> Nothing
         )
         images

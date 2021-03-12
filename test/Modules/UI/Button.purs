@@ -1,7 +1,9 @@
 module Test.UI.Button where
 
+import Prelude
+import Core.Models (size, vec)
 import Game.Domain.Element (Element)
 import UI.Button (button)
 
 testButton :: Element
-testButton = button "testId" "test" { x: 100, y: 100 } { width: 100, height: 100 } []
+testButton = button "testId" "test" (vec 100 100) (size 100 100) []

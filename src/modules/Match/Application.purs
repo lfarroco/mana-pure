@@ -1,9 +1,8 @@
 module Match.Application where
 
-import Core.Models (Vector)
 import Data.Map (empty, insert, lookup)
 import Data.Maybe (Maybe(..))
-import Match.Domain (Battlefield, Tile, TileIndex, TileType)
+import Match.Domain (Battlefield, Tile, TileIndex, TileType, TilePosition)
 
 createBattlefield :: Battlefield
 createBattlefield =
@@ -11,13 +10,13 @@ createBattlefield =
   , cities: ""
   }
 
-createTile :: TileType -> Vector -> Tile
+createTile :: TileType -> TilePosition -> Tile
 createTile type_ pos =
   { type: type_
   , pos
   }
 
-addTile :: Vector -> Tile -> TileIndex -> TileIndex
+addTile :: TilePosition -> Tile -> TileIndex -> TileIndex
 addTile { x, y } tile map_ =
   let
     next = case lookup y map_ of

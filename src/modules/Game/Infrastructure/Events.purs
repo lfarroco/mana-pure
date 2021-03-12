@@ -1,6 +1,8 @@
 module Game.Infrastructure.Events where
 
 import Prelude
+
+import Core.Models (Vector)
 import Data.Map (lookup)
 import Data.Maybe (Maybe(..))
 import Effect.Class.Console (log)
@@ -8,6 +10,7 @@ import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrastructure.Models (EventRunner)
 import Graphics.Phaser (addTween, destroy, onUpdate, removeChildren, removeOnUpdate)
+import Math (pow)
 
 runEvent :: EventRunner
 runEvent renderer stateRef event = do
@@ -44,10 +47,10 @@ runEvent renderer stateRef event = do
             , targets: img
             , props: to
             , delay: 0
-            , duration
+            , duration: duration
             , ease: "Cubic"
-            , repeat: -1
-            , yoyo: true
+            , repeat: 0
+            , yoyo: false
             }
         pure unit
       Nothing -> pure unit
@@ -55,3 +58,22 @@ runEvent renderer stateRef event = do
       log "adding callback"
       onUpdate { callback, scene: state.scene }
     RemoveOnUpdate -> do removeOnUpdate state.scene
+    MoveChara charaId fromRef toVec -> case lookup charaId state.imageIndex of
+      Just img -> do
+        from <- read fromRef
+        _ <-
+          addTween
+            { scene: state.scene
+            , targets: img
+            , props: toVec
+            , delay: 0
+            , duration: distance from toVec
+            , ease: "Cubic"
+            , repeat: 0
+            , yoyo: false
+            }
+        pure unit
+      Nothing -> pure unit
+
+distance :: Vector -> Vector -> Number
+distance from to = pow (from.x - to.x) 2.0 + pow (from.y + to.y) 2.0

@@ -1,6 +1,6 @@
 module UI.Button where
 
-import Core.Models (Size, Vector)
+import Core.Models (Size, Vector, vec)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent)
 
@@ -14,12 +14,12 @@ button id text pos size onClick =
     , onCreate: []
     , children:
         [ Rect
-            { pos: { x: 0, y: 0 }
+            { pos: vec 0 0
             , size: { width: size.width, height: size.height }
             , color: "0x888888"
             }
         , Text
-            { pos: { x: 10, y: 10 }
+            { pos: vec 10 10
             , text
             }
         ]

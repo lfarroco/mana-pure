@@ -2,7 +2,6 @@ module Match.Domain where
 
 import Character.Application (CharacterIndex)
 import Character.Domain (Character)
-import Core.Models (Vector)
 import Data.Map (Map)
 
 type Player
@@ -27,7 +26,7 @@ type SquadIndex
 
 type Piece
   = { character :: Character
-    , pos :: Vector
+    , pos :: TilePosition
     }
 
 type Unknown
@@ -41,8 +40,13 @@ data TileType
 
 type Tile
   = { type :: TileType
-    , pos :: Vector
+    , pos :: TilePosition
     }
+
+type TilePosition = {
+  x:: Int,
+  y:: Int
+}
 
 type TileIndex
   = Map Int (Map Int Tile)
@@ -55,7 +59,7 @@ type Battlefield
 type City
   = { name :: String
     , type_ :: CityType
-    , pos :: Vector
+    , pos :: TilePosition
     , controlledBy :: Player
     }
 

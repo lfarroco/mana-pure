@@ -31,7 +31,7 @@ foreign import addContainer :: PhaserScene -> Vector -> Effect PhaserContainer
 
 foreign import setContainerSize :: PhaserContainer -> Size -> Effect PhaserContainer
 
-foreign import addImage :: PhaserScene -> Int -> Int -> String -> Effect PhaserImage
+foreign import addImage :: PhaserScene -> Number -> Number -> String -> Effect PhaserImage
 
 foreign import setImageDisplaySize :: PhaserImage -> Int -> Int -> Effect PhaserImage
 
@@ -43,7 +43,7 @@ foreign import addTween ::
   , targets :: targets
   , props :: props
   , delay :: Int
-  , duration :: Int
+  , duration :: Number
   , ease :: String
   , repeat :: Int
   , yoyo :: Boolean
@@ -98,6 +98,6 @@ foreign import setTint :: { image :: PhaserImage, color :: String } -> Effect Un
 
 foreign import clearTint :: PhaserImage -> Effect Unit
 
-foreign import onUpdate :: { scene :: PhaserScene, callback :: Int -> Int -> Effect Unit } -> Effect Unit
+foreign import onUpdate :: { scene :: PhaserScene, callback :: Number -> Number  -> Effect Unit } -> Effect Unit
 
 foreign import removeOnUpdate :: PhaserScene -> Effect Unit
