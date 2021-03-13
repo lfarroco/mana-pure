@@ -1,4 +1,4 @@
-module Match.Squad where
+module Match.Domain.Squad where
 
 import Character.Domain as Character
 import Matrix (Matrix)

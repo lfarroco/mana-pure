@@ -1,10 +1,11 @@
-module Match.City where
+module Match.Domain.City where
 
 import Core.Models (BoardSquare)
-import Match.Force as Force 
+import Match.Domain.Force as Force 
 
 newtype Id = Id String
 newtype Name = CityName String
+
 type City
   = { id :: Id
     , name :: Name 

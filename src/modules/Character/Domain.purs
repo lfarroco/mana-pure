@@ -7,6 +7,9 @@ import Job.Domain (Job)
 
 newtype Id = Id String
 
+derive instance eqId :: Eq Id
+derive instance ordId :: Ord Id
+
 newtype Name = Name String
 
 type Character
