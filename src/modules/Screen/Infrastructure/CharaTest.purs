@@ -6,13 +6,12 @@ import Core.Models (size, vec)
 import Data.Array (mapMaybe)
 import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
-import Effect.Ref (Ref)
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 
 
-charaTest :: Ref PhaserState -> Element PhaserState
+charaTest :: PhaserState -> Element PhaserState
 charaTest state =
   Container
     { id: createContainerId "charaTest"

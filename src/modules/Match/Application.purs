@@ -1,26 +1,19 @@
 module Match.Application where
 
-import Data.Map (empty, insert, lookup)
+import Prelude
+import Core.Models (BoardSquare)
 import Data.Maybe (Maybe(..))
-import Match.Domain (Battlefield, Tile, TileIndex, TileType, TilePosition)
+import Match.Battlefield (Battlefield, TileType, Tile)
+import Matrix (Matrix, empty, set)
 
 createBattlefield :: Battlefield
 createBattlefield =
   { tiles: empty
-  , cities: ""
+  , cities: empty
   }
 
-createTile :: TileType -> TilePosition -> Tile
+createTile :: TileType -> BoardSquare -> Tile
 createTile type_ pos =
-  { type: type_
+  { type_
   , pos
   }
-
-addTile :: TilePosition -> Tile -> TileIndex -> TileIndex
-addTile { x, y } tile map_ =
-  let
-    next = case lookup y map_ of
-      Just xn -> insert x tile xn
-      Nothing -> insert x tile empty
-  in
-    insert y next map_

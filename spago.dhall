@@ -9,6 +9,7 @@ You can edit this file as you like.
   , "console"
   , "debug"
   , "effect"
+  , "matrices"
   , "ordered-collections"
   , "psci-support"
   , "quickcheck"

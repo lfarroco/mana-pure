@@ -1,15 +1,13 @@
 module Screen.Infrastructure.MapScreen where
 
 import Prelude
-
 import Character.Domain (Character)
-import Character.Infrastructure (characterIndex)
-import Core.Models (Vector, size, vec)
+import Core.Models (Vector, IndexOf, size, vec)
 import Data.Foldable (foldl, for_)
-import Data.Map (Map, lookup)
+import Data.Map (Map, lookup, insert)
 import Data.Maybe (Maybe(..))
 import Effect.Class.Console (log)
-import Effect.Ref (Ref, modify, modify_, read)
+import Effect.Ref (modify_, read)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
@@ -19,7 +17,7 @@ import Prelude (map, pure, unit, (*), (<>))
 mapScreenId :: ContainerId
 mapScreenId = createContainerId "mapScreen"
 
-mapScreen :: Ref PhaserState -> (Element PhaserState)
+mapScreen :: PhaserState -> (Element PhaserState)
 mapScreen state =
   Container
     { id: mapScreenId
@@ -31,20 +29,35 @@ mapScreen state =
         ]
     , onCreate:
         [ OnUpdate \st time delta -> do
-            for_ positions \c -> case lookup ("chara_id" <> c.character.id) st.imageIndex of
+            st_ <- read st
+            for_ st_.characters \c -> case lookup c.id st_.imageIndex of
               Just img -> do
-                n <- read state
-                log $ show n.battleField
-                setImagePosition { x: 100.0 + n.battleField, y: 200.0 } img
-                modify_ (\s -> s { battleField = s.battleField + 1.0 }) state
-              Nothing -> do pure unit
+                -- how about mutating everything in a single modify_?
+                modify_
+                  ( \s ->
+                      s
+                        { characters =
+                          insert
+                            (c.id)
+                            (c { pos = { x: c.pos.x + 1.0, y: c.pos.y } }) -- TODO: for each character, get vector (then modify all at once)
+                            s.characters
+                        }
+                  )
+                  st
+                setImagePosition c.pos img
+              Nothing -> do
+                pure unit
         ]
     , children:
-        -- [ Text { pos: vec 200 200, text: "brrrrrrrrr" }
-        -- , Image { id: "chara_id1", pos: vec 100 100, texture: "chara/head_male", tint: Nothing }
-        -- ]
-        foldl (\xs c -> xs <> [ Image { id: "chara_id" <> c.character.id, pos: c.pos, texture: "chara/head_male", tint: Nothing } ]) [] positions
+        foldl
+          ( \xs c ->
+              xs
+                <> [ Image { id: c.id, pos: c.pos, texture: "chara/head_male", tint: Nothing }
+                  ]
+          )
+          []
+          state.characters
     }
 
-positions :: Map String { character :: Character, pos :: Vector }
-positions = map (\character -> { character, pos: vec (character.age * 100) 100 }) characterIndex
+positions :: IndexOf Character -> IndexOf { character :: Character, pos :: Vector }
+positions charas = map (\character -> { character, pos: vec (character.age * 100) 100 }) charas

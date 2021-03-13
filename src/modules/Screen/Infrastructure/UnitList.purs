@@ -1,44 +1,48 @@
 module Screen.Infrastructure.UnitList where
 
 import Prelude
-
-import Character.Application (CharacterIndex)
+import Character.Domain as Character
 import Character.Infrastructure (characterIndex)
 import Core.Models (size, vec, Vector)
 import Data.Array (fromFoldable)
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Map (values)
-import Effect.Ref (Ref)
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import UI.Button (button)
 
-renderList :: Ref PhaserState -> Array (Element PhaserState)
+renderList :: PhaserState -> Array (Element PhaserState)
 renderList state =
+  let
+      name (Character.Name n) = n
+  in
   characterIndex
     # values
     # mapWithIndex
         ( \i v ->
             button
               ("unitList_id" <> (show $ i + 1))
-              (v.name)
+              (name v.name)
               (vec 300 (100 + (i * 60)))
               (size 200 50)
               [ \st ve -> RemoveChildren $ createContainerId "unitInfoWrapper"
-              , \st ve -> RenderComponent (createContainerId "unitInfoWrapper") (unitInfo v.id v.name)
+              , \st ve ->
+                  RenderComponent
+                    (createContainerId "unitInfoWrapper")
+                    (unitInfo v.id v.name)
               ]
         )
     # fromFoldable
 
-unitInfo :: forall st. String -> String -> Element st
-unitInfo id name =
+unitInfo :: Character.Id -> Character.Name -> Element PhaserState
+unitInfo (Character.Id cid) (Character.Name name) =
   Text
     { pos: vec 0 0
-    , text: id <> " // " <> name
+    , text: cid <> " // " <> name
     }
 
-unitListScreen :: Ref PhaserState -> Element PhaserState
+unitListScreen :: PhaserState -> Element PhaserState
 unitListScreen state =
   Container
     { id: createContainerId "unitListScreen"
@@ -65,7 +69,7 @@ unitListScreen state =
         , onClick: []
         , onCreate: []
         , children:
-            [ unitInfo "id1" "id1"
+            [ unitInfo (Character.Id "id1") (Character.Name "id1")
             ]
         }
     ]

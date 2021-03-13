@@ -24,7 +24,7 @@ data ManaEvent element containerId st
   | RemoveChildren containerId
   | RenderComponent containerId element
   | TweenImage String Vector Number
-  | OnUpdate (st -> Time -> Delta -> Effect Unit)
+  | OnUpdate (Ref st -> Time -> Delta -> Effect Unit)
   | RemoveOnUpdate
   -- map events
   | MoveImage String Vector

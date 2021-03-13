@@ -1,6 +1,6 @@
 module Game.Infrasctruture.PhaserState where
 
-import Core.Models (State)
+import Core.Models (State, Vector)
 import Data.Map (Map)
 import Game.Domain.Element (ContainerId)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserImage, PhaserScene)
@@ -12,5 +12,5 @@ type PhaserState
       , imageIndex :: Map String PhaserImage
       , root :: PhaserContainer
       , scene :: PhaserScene
-      , battleField:: Number
+      , characters :: Map String { pos :: Vector, id :: String }
       }

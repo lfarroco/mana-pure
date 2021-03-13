@@ -1,7 +1,6 @@
 module Main where
 
 import Prelude
-
 import Core.Models (vec)
 import Data.Map (empty, insert)
 import Effect (Effect)
@@ -39,5 +38,10 @@ initilState game scene root =
       empty
         # insert (createContainerId "__root") root
   , imageIndex: empty
-  , battleField: 0.0
+  , characters:
+      empty
+        # insert "id1" ({ pos: vec 100 100, id: "id1" })
+        # insert "id2" ({ pos: vec 200 100, id: "id2" })
+        # insert "id3" ({ pos: vec 100 200, id: "id3" })
+        # insert "id4" ({ pos: vec 200 200, id: "id4" })
   }

@@ -22,7 +22,7 @@ runEvent renderer stateRef event = do
       case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
-    RenderScreen id parentId -> case lookup id (screenIndex stateRef) of
+    RenderScreen id parentId -> case lookup id (screenIndex state) of 
       Just screen -> do
         mParent <- case lookup parentId state.containerIndex of
           Just cont -> do
@@ -56,7 +56,7 @@ runEvent renderer stateRef event = do
         pure unit
       Nothing -> pure unit
     OnUpdate callback -> do
-      onUpdate { callback: callback state, scene: state.scene }
+      onUpdate { callback: callback stateRef, scene: state.scene }
     RemoveOnUpdate -> do removeOnUpdate state.scene
     MoveImage id vec -> case lookup id state.imageIndex of
       Just img -> do setImagePosition vec img

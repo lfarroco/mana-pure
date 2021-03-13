@@ -10,7 +10,7 @@ import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import UI.Button (button)
 
-mainScreen :: Ref PhaserState -> Element PhaserState
+mainScreen :: PhaserState -> Element PhaserState
 mainScreen state =
   Container
     { id: createContainerId "mainScreen"
