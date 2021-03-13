@@ -6,7 +6,7 @@ import Prelude ((#))
 
 characterIndex :: CharacterIndex
 characterIndex =
-  empty # insert "id1" (createCharacter "id1")
-    # insert "id2" (createCharacter "id2")
-    # insert "id3" (createCharacter "id3")
-    # insert "id4" (createCharacter "id4")
+  empty # insert "id1" (createCharacter "id1" 1)
+    # insert "id2" (createCharacter "id2" 2)
+    # insert "id3" (createCharacter "id3" 3)
+    # insert "id4" (createCharacter "id4" 4)

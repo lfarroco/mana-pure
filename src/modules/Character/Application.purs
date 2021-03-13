@@ -7,11 +7,11 @@ import Job.Domain (fighter)
 type CharacterIndex
   = Map String Character
 
-createCharacter :: String -> Character
-createCharacter s =
+createCharacter :: String -> Int -> Character
+createCharacter s age =
   { id: s
   , name: s
   , job: fighter
-  , age: 22
+  , age
   , hp: createHitPoints 20
   }

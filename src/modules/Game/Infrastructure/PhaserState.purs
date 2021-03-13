@@ -12,4 +12,5 @@ type PhaserState
       , imageIndex :: Map String PhaserImage
       , root :: PhaserContainer
       , scene :: PhaserScene
+      , battleField:: Number
       }

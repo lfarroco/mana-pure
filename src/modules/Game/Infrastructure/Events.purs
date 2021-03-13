@@ -1,7 +1,6 @@
 module Game.Infrastructure.Events where
 
 import Prelude
-
 import Core.Models (Vector)
 import Data.Map (lookup)
 import Data.Maybe (Maybe(..))
@@ -10,7 +9,7 @@ import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (addTween, destroy, onUpdate, removeChildren, removeOnUpdate)
+import Graphics.Phaser (addTween, destroy, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
 import Math (pow)
 import Screen.Infrastructure.Screens (screenIndex)
 
@@ -23,7 +22,7 @@ runEvent renderer stateRef event = do
       case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
-    RenderScreen id parentId -> case lookup id screenIndex of
+    RenderScreen id parentId -> case lookup id (screenIndex stateRef) of
       Just screen -> do
         mParent <- case lookup parentId state.containerIndex of
           Just cont -> do
@@ -59,21 +58,8 @@ runEvent renderer stateRef event = do
     OnUpdate callback -> do
       onUpdate { callback: callback state, scene: state.scene }
     RemoveOnUpdate -> do removeOnUpdate state.scene
-    MoveChara charaId fromRef toVec -> case lookup charaId state.imageIndex of
-      Just img -> do
-        from <- read fromRef
-        _ <-
-          addTween
-            { scene: state.scene
-            , targets: img
-            , props: toVec
-            , delay: 0
-            , duration: distance from toVec
-            , ease: "Cubic"
-            , repeat: 0
-            , yoyo: false
-            }
-        pure unit
+    MoveImage id vec -> case lookup id state.imageIndex of
+      Just img -> do setImagePosition vec img
       Nothing -> pure unit
 
 distance :: Vector -> Vector -> Number

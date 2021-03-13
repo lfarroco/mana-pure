@@ -89,6 +89,14 @@ exports.setImageOrigin = function (image) {
     };
   };
 };
+exports.setImagePosition = function ({x,y}) {
+  return function (image) {
+      return function () {
+        image.setPosition(x, y);
+        return {}
+      };
+  };
+};
 exports.addTween = function ({
   scene,
   targets,

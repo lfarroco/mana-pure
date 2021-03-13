@@ -39,4 +39,5 @@ initilState game scene root =
       empty
         # insert (createContainerId "__root") root
   , imageIndex: empty
+  , battleField: 0.0
   }

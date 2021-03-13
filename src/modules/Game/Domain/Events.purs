@@ -27,4 +27,4 @@ data ManaEvent element containerId st
   | OnUpdate (st -> Time -> Delta -> Effect Unit)
   | RemoveOnUpdate
   -- map events
-  | MoveChara String (Ref Vector) Vector
+  | MoveImage String Vector

@@ -1,18 +1,22 @@
 module Screen.Infrastructure.UnitList where
 
 import Prelude
+
 import Character.Application (CharacterIndex)
+import Character.Infrastructure (characterIndex)
 import Core.Models (size, vec, Vector)
 import Data.Array (fromFoldable)
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Map (values)
+import Effect.Ref (Ref)
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
+import Game.Infrasctruture.PhaserState (PhaserState)
 import UI.Button (button)
 
-renderList :: forall state. CharacterIndex -> Array (Element state)
-renderList index =
-  index
+renderList :: Ref PhaserState -> Array (Element PhaserState)
+renderList state =
+  characterIndex
     # values
     # mapWithIndex
         ( \i v ->
@@ -34,8 +38,8 @@ unitInfo id name =
     , text: id <> " // " <> name
     }
 
-unitListScreen :: forall state. CharacterIndex -> Element state
-unitListScreen charaIndex =
+unitListScreen :: Ref PhaserState -> Element PhaserState
+unitListScreen state =
   Container
     { id: createContainerId "unitListScreen"
     , pos: vec 0 0
@@ -65,4 +69,4 @@ unitListScreen charaIndex =
             ]
         }
     ]
-      <> renderList charaIndex
+      <> renderList state

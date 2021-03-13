@@ -34,9 +34,12 @@ foreign import setContainerSize :: PhaserContainer -> Size -> Effect PhaserConta
 
 foreign import addImage :: PhaserScene -> Number -> Number -> String -> Effect PhaserImage
 
+-- TODO: return image returns
 foreign import setImageDisplaySize :: PhaserImage -> Int -> Int -> Effect PhaserImage
 
 foreign import setImageOrigin :: PhaserImage -> Int -> Int -> Effect PhaserImage
+
+foreign import setImagePosition :: Vector -> PhaserImage -> Effect Unit
 
 foreign import addTween ::
   forall targets props.
