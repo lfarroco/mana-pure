@@ -60,7 +60,7 @@ unitListScreen state =
   children =
     [ button "unitListBtn" "go back" pos sz
         $ [ \st _ -> Destroy $ createContainerId "unitListScreen"
-          , \st _ -> RenderScreen "mainScreen" $ createContainerId "__root"
+          , \st _ -> RenderScreen "mainScreen"
           ]
     , Container
         { id: createContainerId "unitInfoWrapper"

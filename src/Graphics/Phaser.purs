@@ -1,7 +1,6 @@
 module Graphics.Phaser where
 
 import Prelude
-
 import Core.Models (Vector, Size)
 import Effect (Effect)
 import Effect.Aff (Aff)
@@ -21,11 +20,17 @@ foreign import data PhaserText :: Type
 
 foreign import data PhaserGraphic :: Type
 
+foreign import data PhaserTileMap :: Type
+
+foreign import data PhaserTileSet :: Type
+
+foreign import data PhaserLayer :: Type
+
 foreign import newGame :: Int -> Int -> Effect PhaserGame
 
-foreign import createScene_ :: { game :: PhaserGame, name :: String, assets :: Array String } -> EffectFnAff PhaserScene
+foreign import createScene_ :: { game :: PhaserGame, name :: String, assets :: { png :: Array String, svg :: Array String } } -> EffectFnAff PhaserScene
 
-createScene :: { game :: PhaserGame, name :: String, assets :: Array String } -> Aff PhaserScene
+createScene :: { game :: PhaserGame, name :: String, assets :: { png :: Array String, svg :: Array String } } -> Aff PhaserScene
 createScene param = fromEffectFnAff $ createScene_ param
 
 foreign import addContainer :: PhaserScene -> Vector -> Effect PhaserContainer
@@ -73,8 +78,9 @@ delay a = fromEffectFnAff <<< delay_ a
 
 foreign import imageOnPointerUp :: PhaserImage -> (Vector -> Effect Unit) -> Effect Unit
 
-foreign import containerOnPointerUp :: forall gameState.
-  PhaserContainer -> (Vector -> ManaEvent (Element gameState ) ContainerId gameState) -> ((ManaEvent (Element gameState) ContainerId gameState) -> Effect Unit) -> Effect Unit
+foreign import containerOnPointerUp ::
+  forall gameState.
+  PhaserContainer -> (Vector -> ManaEvent (Element gameState) ContainerId gameState) -> ((ManaEvent (Element gameState) ContainerId gameState) -> Effect Unit) -> Effect Unit
 
 foreign import solidColorRect :: PhaserScene -> Vector -> Size -> String -> Effect PhaserGraphic
 
@@ -102,6 +108,12 @@ foreign import setTint :: { image :: PhaserImage, color :: String } -> Effect Un
 
 foreign import clearTint :: PhaserImage -> Effect Unit
 
-foreign import onUpdate :: { scene :: PhaserScene, callback :: Number -> Number  -> Effect Unit } -> Effect Unit
+foreign import onUpdate :: { scene :: PhaserScene, callback :: Number -> Number -> Effect Unit } -> Effect Unit
 
 foreign import removeOnUpdate :: PhaserScene -> Effect Unit
+
+foreign import makeTileMap :: { scene :: PhaserScene, tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileMap
+
+foreign import addTilesetImage :: { tileMap :: PhaserTileMap, key :: String, tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileSet
+
+foreign import createLayer :: { tileMap :: PhaserTileMap, tileset:: PhaserTileSet } -> Effect PhaserLayer

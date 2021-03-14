@@ -23,7 +23,6 @@ newtype ContainerId
   = ContainerId String
 
 derive instance eqContainerId :: Eq ContainerId
-
 derive instance ordContainerId :: Ord ContainerId
 
 createContainerId :: String -> ContainerId

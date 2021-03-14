@@ -2,7 +2,7 @@ module Match.Application.Force where
 
 import Match.Domain.Force
 
-import Character.Domain as Character
+import Character.Domain as Chara
 import Data.Map (empty, insert)
 import Match.Domain.Squad (Squad)
 
@@ -16,7 +16,7 @@ createForce id_ name color =
   , characters: empty
   }
 
-addCharacter:: Character.Character -> Force -> Force
+addCharacter:: Chara.Character -> Force -> Force
 addCharacter character force =
   force { characters= insert character.id character force.characters}
 

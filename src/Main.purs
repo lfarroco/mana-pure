@@ -25,7 +25,7 @@ main = do
     state <- (new $ initilState game scene root) # liftEffect
     runEvent render state initialEvent # liftEffect
   where
-  initialEvent = RenderScreen "mainScreen" $ createContainerId "__root"
+  initialEvent = RenderScreen "mainScreen" 
 
   createRootContainer scene = addContainer scene (vec 0 0) # liftEffect
 

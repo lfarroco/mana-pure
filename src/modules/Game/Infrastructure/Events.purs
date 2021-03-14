@@ -9,7 +9,7 @@ import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (addTween, destroy, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
+import Graphics.Phaser (addTilesetImage, addTween, createLayer, destroy, makeTileMap, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
 import Math (pow)
 import Screen.Infrastructure.Screens (screenIndex)
 
@@ -18,49 +18,64 @@ runEvent renderer stateRef event = do
   state <- read stateRef
   case event of
     Destroy id -> do
-      log $ "destroying "
+      log $ ">>Destroy "
       case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
-    RenderScreen id parentId -> case lookup id (screenIndex state) of 
-      Just screen -> do
-        mParent <- case lookup parentId state.containerIndex of
-          Just cont -> do
-            _ <- renderer stateRef screen cont
-            pure unit
-          Nothing -> do
-            pure unit
-        pure unit
-      Nothing -> do pure unit
-    RemoveChildren id -> case lookup id state.containerIndex of
-      Just cont -> removeChildren cont
-      Nothing -> do pure unit
-    RenderComponent parentId elem -> case lookup parentId state.containerIndex of
-      Just parent -> do
-        _ <- renderer stateRef elem parent
-        pure unit
-      Nothing -> do pure unit
-    TweenImage id to duration -> case lookup id state.imageIndex of
-      Just img -> do
-        _ <-
-          addTween
-            { scene: state.scene
-            , targets: img
-            , props: to
-            , delay: 0
-            , duration: duration
-            , ease: "Cubic"
-            , repeat: 0
-            , yoyo: false
-            }
-        pure unit
-      Nothing -> pure unit
+    RenderScreen id -> do
+      log $ ">>Render Screen"
+      case lookup id (screenIndex state) of
+        Just screen -> do
+          _ <- renderer stateRef screen Nothing
+          pure unit
+        Nothing -> do
+          pure unit
+    RemoveChildren id -> do
+      log $ ">>Remove Children"
+      case lookup id state.containerIndex of
+        Just cont -> removeChildren cont
+        Nothing -> do pure unit
+    RenderComponent parentId elem -> do
+      log $ ">>Render Component"
+      case lookup parentId state.containerIndex of
+        Just parent -> do
+          _ <- renderer stateRef elem (Just parent)
+          pure unit
+        Nothing -> do pure unit
+    TweenImage id to duration -> do
+      log $ ">>Tween Image"
+      case lookup id state.imageIndex of
+        Just img -> do
+          _ <-
+            addTween
+              { scene: state.scene
+              , targets: img
+              , props: to
+              , delay: 0
+              , duration: duration
+              , ease: "Cubic"
+              , repeat: 0
+              , yoyo: false
+              }
+          pure unit
+        Nothing -> pure unit
     OnUpdate callback -> do
+      log $ ">>OnUpdate"
       onUpdate { callback: callback stateRef, scene: state.scene }
-    RemoveOnUpdate -> do removeOnUpdate state.scene
-    MoveImage id vec -> case lookup id state.imageIndex of
-      Just img -> do setImagePosition vec img
-      Nothing -> pure unit
+    RemoveOnUpdate -> do
+      log $ ">>Remove OnUpdate"
+      removeOnUpdate state.scene
+    MoveImage id vec -> do
+      log $ ">>Move Image"
+      case lookup id state.imageIndex of
+        Just img -> do setImagePosition vec img
+        Nothing -> pure unit
+    CreateTileMap -> do
+      log $ ">>Create TileMap"
+      tileMap <- makeTileMap { scene: state.scene, tileWidth: 64, tileHeight: 64 }
+      tileset <- addTilesetImage { tileMap, key: "tilemaps/kenney_64x64", tileWidth: 64, tileHeight: 64 }
+      layer <- createLayer { tileMap, tileset }
+      pure unit
 
 distance :: Vector -> Vector -> Number
 distance from to = pow (from.x - to.x) 2.0 + pow (from.y + to.y) 2.0

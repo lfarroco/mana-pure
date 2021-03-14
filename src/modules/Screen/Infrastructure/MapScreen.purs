@@ -4,15 +4,13 @@ import Prelude
 import Character.Domain (Character)
 import Core.Models (Vector, IndexOf, size, vec)
 import Data.Foldable (foldl, for_)
-import Data.Map (Map, lookup, insert)
+import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
-import Effect.Class.Console (log)
 import Effect.Ref (modify_, read)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Graphics.Phaser (setImagePosition)
-import Prelude (map, pure, unit, (*), (<>))
 
 mapScreenId :: ContainerId
 mapScreenId = createContainerId "mapScreen"
@@ -28,7 +26,7 @@ mapScreen state =
             TweenImage "chara" vector 1000.0
         ]
     , onCreate:
-        [ OnUpdate \st time delta -> do
+        [OnUpdate \st time delta -> do
             st_ <- read st
             for_ st_.characters \c -> case lookup c.id st_.imageIndex of
               Just img -> do

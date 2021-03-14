@@ -1,6 +1,8 @@
 module Game.Infrastructure.Models where
 
 import Prelude
+
+import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Ref (Ref)
 import Game.Domain.Element (ContainerId, Element)
@@ -11,4 +13,4 @@ type EventRunner gameState
   = Renderer gameState -> Ref gameState -> ManaEvent (Element gameState) ContainerId gameState -> Effect Unit
 
 type Renderer gameState
-  = Ref gameState -> Element gameState -> PhaserContainer -> Effect PhaserContainer
+  = Ref gameState -> Element gameState -> Maybe PhaserContainer -> Effect Unit

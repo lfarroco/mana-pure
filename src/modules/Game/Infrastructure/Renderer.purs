@@ -16,33 +16,39 @@ import Graphics.Phaser (PhaserContainer, addContainer, addImage, addToContainer,
 addToContainer_ :: forall element. PhaserContainer -> element -> Effect PhaserContainer
 addToContainer_ container element = addToContainer { element, container }
 
+mAdd :: forall element. Maybe PhaserContainer -> element -> Effect Unit
+mAdd parentContainer element = case parentContainer of
+  Nothing -> pure unit
+  Just parent -> do
+    _ <- addToContainer_ parent element
+    pure unit
+
 render :: Renderer PhaserState
 render state element parentContainer = do
   st <- read state
   case element of
     Container c -> do
       container <- addContainer st.scene c.pos
-      _ <- addToContainer_ parentContainer container
       _ <- setContainerSize container c.size
       modify_ (\s -> s { containerIndex = insert c.id container s.containerIndex }) state
-      for_ c.children (\e -> render state e container)
       for_ c.onClick \ev -> do
         s <- read state
         containerOnPointerUp container (\v -> ev state v) (runEvent_ state)
+      for_ c.children (\e -> render state e (Just container))
       for_ c.onCreate \ev -> do
         s <- read state
         runEvent_ state ev
-      pure parentContainer
+      mAdd parentContainer container
     Image i -> do
       image <- addImage st.scene i.pos.x i.pos.y i.texture
       modify_ (\s -> s { imageIndex = insert i.id image s.imageIndex }) state
       _ <- case i.tint of
         Just color -> setTint { color, image }
         Nothing -> pure unit
-      addToContainer_ parentContainer image
+      mAdd parentContainer image
     Rect r -> do
       rect <- solidColorRect st.scene r.pos r.size r.color
-      addToContainer_ parentContainer rect
+      mAdd parentContainer rect
     Text t -> do
       log $ "rendering " <> t.text
       text_ <-
@@ -52,6 +58,6 @@ render state element parentContainer = do
           , text: t.text
           , config: { color: "#fff", fontSize: 18, fontFamily: "sans-serif" }
           }
-      addToContainer_ parentContainer text_
+      mAdd parentContainer text_
   where
   runEvent_ = runEvent render

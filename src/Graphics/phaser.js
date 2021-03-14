@@ -20,8 +20,12 @@ exports.createScene_ = function ({ game, name, assets }) {
       name,
       {
         preload: function () {
-          assets.forEach((str) =>
+          assets.svg.forEach((str) =>
             this.load.image(str, "assets/" + str + ".svg")
+          );
+
+          assets.png.forEach((str) =>
+            this.load.image(str, "assets/" + str + ".png")
           );
         },
         create: function () {
@@ -89,12 +93,12 @@ exports.setImageOrigin = function (image) {
     };
   };
 };
-exports.setImagePosition = function ({x,y}) {
+exports.setImagePosition = function ({ x, y }) {
   return function (image) {
-      return function () {
-        image.setPosition(x, y);
-        return {}
-      };
+    return function () {
+      image.setPosition(x, y);
+      return {};
+    };
   };
 };
 exports.addTween = function ({
@@ -159,8 +163,7 @@ exports.imageOnPointerUp = function (image) {
   return function (listener) {
     return function () {
       image.setInteractive();
-      image.on("pointerup", function (e) {
-        console.log(`>>>`, e);
+      image.on("pointerup", function (_) {
         listener()();
       });
     };
@@ -252,5 +255,37 @@ exports.removeOnUpdate = function (scene) {
     return function () {
       scene.events.update.removeAll();
     };
+  };
+};
+
+exports.makeTileMap = function ({ scene, tileWidth, tileHeight }) {
+  return () => {
+    var data = [
+      [58,58,58,58,58,58,58,58,58,58,58,58,58,58],
+      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
+      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
+      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
+      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
+      [58,58,58,58,58,58,58,58,58,58,58,58,58,58],
+    ];
+
+    return scene.make.tilemap({ data, tileWidth, tileHeight });
+
+    //       var map = scene.make.tilemap({ data, tileWidth: 64, tileHeight: 64 });
+    //     var tiles = map.addTilesetImage("tilemaps/kenney_64x64", null, 64, 64);
+    //     var layer = map.createLayer(0, tiles, 0, 0);
+  };
+};
+
+exports.addTilesetImage = function ({ tileMap, key, tileWidth, tileHeight }) {
+  return () => {
+    console.log(`....`, key);
+    return tileMap.addTilesetImage(key, null, tileWidth, tileHeight);
+  };
+};
+
+exports.createLayer = function ({ tileMap, tileset }) {
+  return () => {
+    return tileMap.createLayer(0, tileset, 0, 0);
   };
 };

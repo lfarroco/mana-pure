@@ -20,7 +20,7 @@ type Delta = Number
 
 data ManaEvent element containerId st
   = Destroy containerId
-  | RenderScreen ScreenId containerId
+  | RenderScreen ScreenId 
   | RemoveChildren containerId
   | RenderComponent containerId element
   | TweenImage String Vector Number
@@ -28,3 +28,4 @@ data ManaEvent element containerId st
   | RemoveOnUpdate
   -- map events
   | MoveImage String Vector
+  | CreateTileMap
