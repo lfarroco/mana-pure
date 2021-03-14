@@ -96,6 +96,7 @@ exports.setImageOrigin = function (image) {
 exports.setImagePosition = function ({ x, y }) {
   return function (image) {
     return function () {
+      console.log(x,y)
       image.setPosition(x, y);
       return {};
     };
@@ -258,22 +259,9 @@ exports.removeOnUpdate = function (scene) {
   };
 };
 
-exports.makeTileMap = function ({ scene, tileWidth, tileHeight }) {
+exports.makeTileMap = function ({ scene, data, tileWidth, tileHeight }) {
   return () => {
-    var data = [
-      [58,58,58,58,58,58,58,58,58,58,58,58,58,58],
-      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
-      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
-      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
-      [58,58,58,58,58,41,58,58,58,58,58,58,58,58],
-      [58,58,58,58,58,58,58,58,58,58,58,58,58,58],
-    ];
-
     return scene.make.tilemap({ data, tileWidth, tileHeight });
-
-    //       var map = scene.make.tilemap({ data, tileWidth: 64, tileHeight: 64 });
-    //     var tiles = map.addTilesetImage("tilemaps/kenney_64x64", null, 64, 64);
-    //     var layer = map.createLayer(0, tiles, 0, 0);
   };
 };
 

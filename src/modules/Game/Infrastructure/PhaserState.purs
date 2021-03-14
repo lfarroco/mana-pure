@@ -2,6 +2,7 @@ module Game.Infrasctruture.PhaserState where
 
 import Core.Models (State, Vector)
 import Data.Map (Map)
+import Data.Maybe (Maybe)
 import Game.Domain.Element (ContainerId)
 import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserImage, PhaserScene)
 
@@ -12,5 +13,8 @@ type PhaserState
       , imageIndex :: Map String PhaserImage
       , root :: PhaserContainer
       , scene :: PhaserScene
-      , characters :: Map String { pos :: Vector, id :: String }
+      -- TODO: create new type Action, with possible current actions for characters on map
+      , characters :: Map String { pos :: Vector, id :: String, action:: Maybe Vector }
       }
+
+

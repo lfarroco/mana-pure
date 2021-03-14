@@ -1,16 +1,19 @@
 module Screen.Infrastructure.MapScreen where
 
 import Prelude
+
 import Character.Domain (Character)
-import Core.Models (Vector, IndexOf, size, vec)
+import Core.Models (IndexOf, Vector, size, vec)
 import Data.Foldable (foldl, for_)
 import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
-import Effect.Ref (modify_, read)
+import Effect (Effect)
+import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Graphics.Phaser (setImagePosition)
+import Math (abs)
 
 mapScreenId :: ContainerId
 mapScreenId = createContainerId "mapScreen"
@@ -26,25 +29,7 @@ mapScreen state =
             TweenImage "chara" vector 1000.0
         ]
     , onCreate:
-        [OnUpdate \st time delta -> do
-            st_ <- read st
-            for_ st_.characters \c -> case lookup c.id st_.imageIndex of
-              Just img -> do
-                -- how about mutating everything in a single modify_?
-                modify_
-                  ( \s ->
-                      s
-                        { characters =
-                          insert
-                            (c.id)
-                            (c { pos = { x: c.pos.x + 1.0, y: c.pos.y } }) -- TODO: for each character, get vector (then modify all at once)
-                            s.characters
-                        }
-                  )
-                  st
-                setImagePosition c.pos img
-              Nothing -> do
-                pure unit
+        [ OnUpdate onUpdateAction
         ]
     , children:
         foldl
@@ -59,3 +44,55 @@ mapScreen state =
 
 positions :: IndexOf Character -> IndexOf { character :: Character, pos :: Vector }
 positions charas = map (\character -> { character, pos: vec (character.age * 100) 100 }) charas
+
+onUpdateAction :: Ref PhaserState -> Number -> Number -> Effect Unit
+onUpdateAction st time delta = do
+  st_ <- read st
+  for_ st_.characters \c -> case c.action of
+    Nothing -> pure unit
+    Just target -> case lookup c.id st_.imageIndex of
+      Nothing -> do pure unit
+      Just img ->
+        let
+          step = getStep c.pos target 1.0
+
+          arrived = abs step.x + abs step.y < 1.0
+        in
+          do
+            -- how about mutating everything in a single modify_?
+            modify_
+              ( \s ->
+                  s
+                    { characters =
+                      insert
+                        (c.id)
+                        ( c
+                            { pos = sum c.pos step
+                            , action =
+                              if arrived then
+                                Nothing
+                              else
+                                c.action
+                            }
+                        ) -- TODO: for each character, get vector (then modify all at once)
+                        s.characters
+                    }
+              )
+              st
+            setImagePosition c.pos img
+
+getStep :: Vector -> Vector -> Number -> Vector
+getStep from to speed =
+  let
+    x = to.x - from.x
+
+    y = to.y - from.y
+
+    total = abs x + abs y
+  in
+    { x: if x /= 0.0 && total /= 0.0 then x / total * speed else 0.0
+    , y: if y /= 0.0 && total /= 0.0 then y / total * speed else 0.0
+    }
+
+sum :: Vector -> Vector -> Vector
+sum vec1 vec2 = { x: vec1.x + vec2.x, y: vec1.y + vec2.y }

@@ -112,7 +112,7 @@ foreign import onUpdate :: { scene :: PhaserScene, callback :: Number -> Number 
 
 foreign import removeOnUpdate :: PhaserScene -> Effect Unit
 
-foreign import makeTileMap :: { scene :: PhaserScene, tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileMap
+foreign import makeTileMap :: { scene :: PhaserScene, data:: Array (Array Int), tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileMap
 
 foreign import addTilesetImage :: { tileMap :: PhaserTileMap, key :: String, tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileSet
 

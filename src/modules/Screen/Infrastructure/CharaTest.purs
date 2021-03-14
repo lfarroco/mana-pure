@@ -9,7 +9,7 @@ import Data.Maybe (Maybe(..))
 import Game.Domain.Element (Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
-
+import UI.Button (button)
 
 charaTest :: PhaserState -> Element PhaserState
 charaTest state =
@@ -22,6 +22,10 @@ charaTest state =
     , children:
         [ Rect { pos: vec 0 0, size: size 200 400, color: "0xeaeaea" }
         , chara "1"
+        , button "charaTestBtn" "go back" (vec 300 100) (size 150 50)
+            $ [ \st _ -> Destroy $ createContainerId "charaTest"
+              , \st _ -> RenderScreen "mainScreen"
+              ]
         ]
     }
 

@@ -9,7 +9,17 @@ import Effect.Ref (read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (addTilesetImage, addTween, createLayer, destroy, makeTileMap, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
+import Graphics.Phaser
+  ( addTilesetImage
+  , addTween
+  , createLayer
+  , destroy
+  , makeTileMap
+  , onUpdate
+  , removeChildren
+  , removeOnUpdate
+  , setImagePosition
+  )
 import Math (pow)
 import Screen.Infrastructure.Screens (screenIndex)
 
@@ -72,7 +82,19 @@ runEvent renderer stateRef event = do
         Nothing -> pure unit
     CreateTileMap -> do
       log $ ">>Create TileMap"
-      tileMap <- makeTileMap { scene: state.scene, tileWidth: 64, tileHeight: 64 }
+      tileMap <-
+        makeTileMap
+          { scene: state.scene
+          , data:
+              [ [ 58, 58, 58, 41, 41 ]
+              , [ 58, 58, 41, 41, 41 ]
+              , [ 58, 58, 41, 41, 41 ]
+              , [ 58, 58, 41, 41, 41 ]
+              , [ 58, 58, 58, 58, 58 ]
+              ]
+          , tileWidth: 64
+          , tileHeight: 64
+          }
       tileset <- addTilesetImage { tileMap, key: "tilemaps/kenney_64x64", tileWidth: 64, tileHeight: 64 }
       layer <- createLayer { tileMap, tileset }
       pure unit
