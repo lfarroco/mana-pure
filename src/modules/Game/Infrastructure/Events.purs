@@ -4,7 +4,6 @@ import Prelude
 import Core.Models (Vector)
 import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
-import Effect.Class.Console (log)
 import Effect.Ref (modify_, read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
@@ -19,12 +18,10 @@ runEvent renderer stateRef event = do
   case event of
     NoOp -> pure unit
     Destroy id -> do
-      log $ ">>Destroy "
       case lookup id state.containerIndex of
         Just s -> destroy s
         Nothing -> pure unit
     RenderScreen id -> do
-      log $ ">>Render Screen"
       case lookup id (screenIndex state) of
         Just screen -> do
           _ <- renderer stateRef screen Nothing
@@ -32,19 +29,16 @@ runEvent renderer stateRef event = do
         Nothing -> do
           pure unit
     RemoveChildren id -> do
-      log $ ">>Remove Children"
       case lookup id state.containerIndex of
         Just cont -> removeChildren cont
         Nothing -> do pure unit
     RenderComponent parentId elem -> do
-      log $ ">>Render Component"
       case lookup parentId state.containerIndex of
         Just parent -> do
           _ <- renderer stateRef elem (Just parent)
           pure unit
         Nothing -> do pure unit
     TweenImage id to duration -> do
-      log $ ">>Tween Image"
       case lookup id state.imageIndex of
         Just img -> do
           _ <-
@@ -61,18 +55,14 @@ runEvent renderer stateRef event = do
           pure unit
         Nothing -> pure unit
     OnUpdate callback -> do
-      log $ ">>OnUpdate"
       onUpdate { callback: callback stateRef, scene: state.scene }
     RemoveOnUpdate -> do
-      log $ ">>Remove OnUpdate"
       removeOnUpdate state.scene
     MoveImage id vec -> do
-      log $ ">>Move Image"
       case lookup id state.imageIndex of
         Just img -> do setImagePosition vec img
         Nothing -> pure unit
     CreateTileMap -> do
-      log $ ">>Create TileMap"
       tileMap <-
         makeTileMap
           { scene: state.scene
@@ -90,12 +80,8 @@ runEvent renderer stateRef event = do
       layer <- createLayer { tileMap, tileset }
       pure unit
     SelectSquad mSquadId -> do
-      log ("selecting squad!!")
       modify_ (\s -> s { selectedSquad = mSquadId }) stateRef
     SetSquadAction squadId mvector -> do
-      case mvector of
-        Just v -> log $ show v
-        Nothing -> pure unit
       case lookup squadId state.characters of
         Nothing -> pure unit
         Just squad ->
@@ -104,13 +90,10 @@ runEvent renderer stateRef event = do
           in
             modify_ (\s -> s { characters = insert squadId updatedSquad s.characters }) stateRef
     OnImageClick id callback -> do
-      log "setting onImageClick!"
       case lookup id state.imageIndex of
         Nothing -> do
-          log "not found:*"
           pure unit
-        Just img ->do
-          log "found!"
+        Just img -> do
           imageOnPointerUp img
             ( \xy ->
                 let
@@ -119,13 +102,14 @@ runEvent renderer stateRef event = do
                   runEvent renderer stateRef event_
             )
     MapClick vector -> do
-       st <- read stateRef
-       case st.selectedSquad of 
-            Just id_ -> let
-                            event_ = SetSquadAction id_ (Just vector)
-                        in
-                            runEvent renderer stateRef event_
-            Nothing -> pure unit
+      st <- read stateRef
+      case st.selectedSquad of
+        Just id_ ->
+          let
+            event_ = SetSquadAction id_ (Just vector)
+          in
+            runEvent renderer stateRef event_
+        Nothing -> pure unit
 
 distance :: Vector -> Vector -> Number
 distance from to = pow (from.x - to.x) 2.0 + pow (from.y + to.y) 2.0

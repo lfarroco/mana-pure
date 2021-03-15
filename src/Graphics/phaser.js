@@ -184,8 +184,12 @@ exports.containerOnPointerUp = function (container) {
           Phaser.Geom.Rectangle.Contains
         );
 
-        container.on("pointerup", function (e) {
-          listener(event(e.position))();
+        container.on("pointerup", function (pointer) {
+          const {x,y} = pointer.position
+
+          // Not passing e.position directly because it is a reference to the pointer
+          // and its value changes over time
+          listener(event({x,y}))();
         });
 
         return {};
