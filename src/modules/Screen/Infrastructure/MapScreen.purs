@@ -26,7 +26,7 @@ mapScreen state =
     , size: size 800 600
     , onClick:
         [ \st vector ->
-            TweenImage "chara" vector 1000.0
+            SetSquadAction "id1" (Just vector)
         ]
     , onCreate:
         [ OnUpdate onUpdateAction
@@ -56,7 +56,7 @@ onUpdateAction st time delta = do
         let
           step = getStep c.pos target 1.0
 
-          arrived = abs step.x + abs step.y < 1.0
+          arrived =  abs step.x + abs step.y < 0.98
         in
           do
             -- how about mutating everything in a single modify_?
@@ -90,9 +90,12 @@ getStep from to speed =
 
     total = abs x + abs y
   in
-    { x: if x /= 0.0 && total /= 0.0 then x / total * speed else 0.0
-    , y: if y /= 0.0 && total /= 0.0 then y / total * speed else 0.0
-    }
+    if total > speed then
+      { x: x / total * speed
+      , y: y / total * speed
+      }
+    else
+      { x, y }
 
 sum :: Vector -> Vector -> Vector
 sum vec1 vec2 = { x: vec1.x + vec2.x, y: vec1.y + vec2.y }

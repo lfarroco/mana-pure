@@ -3,6 +3,7 @@ module Game.Domain.Events where
 import Prelude
 
 import Core.Models (Vector)
+import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Ref (Ref)
 
@@ -29,3 +30,4 @@ data ManaEvent element containerId st
   -- map events
   | MoveImage String Vector
   | CreateTileMap
+  | SetSquadAction String (Maybe Vector)

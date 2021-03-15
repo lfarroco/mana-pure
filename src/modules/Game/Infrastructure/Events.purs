@@ -2,24 +2,14 @@ module Game.Infrastructure.Events where
 
 import Prelude
 import Core.Models (Vector)
-import Data.Map (lookup)
+import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
 import Effect.Class.Console (log)
-import Effect.Ref (read)
+import Effect.Ref (modify_, read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser
-  ( addTilesetImage
-  , addTween
-  , createLayer
-  , destroy
-  , makeTileMap
-  , onUpdate
-  , removeChildren
-  , removeOnUpdate
-  , setImagePosition
-  )
+import Graphics.Phaser (addTilesetImage, addTween, createLayer, destroy, makeTileMap, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
 import Math (pow)
 import Screen.Infrastructure.Screens (screenIndex)
 
@@ -98,6 +88,17 @@ runEvent renderer stateRef event = do
       tileset <- addTilesetImage { tileMap, key: "tilemaps/kenney_64x64", tileWidth: 64, tileHeight: 64 }
       layer <- createLayer { tileMap, tileset }
       pure unit
+    SetSquadAction squadId mvector -> do
+      case mvector of 
+         Just v -> log $ show v 
+         Nothing -> pure unit
+      case lookup squadId state.characters of
+        Nothing -> pure unit
+        Just squad ->
+          let
+            updatedSquad = squad { action = mvector }
+          in
+            modify_ (\s -> s { characters = insert squadId updatedSquad s.characters }) stateRef
 
 distance :: Vector -> Vector -> Number
 distance from to = pow (from.x - to.x) 2.0 + pow (from.y + to.y) 2.0

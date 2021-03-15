@@ -42,5 +42,5 @@ initilState game scene root =
   , imageIndex: empty
   , characters:
       empty
-        # insert "id1" ({ pos: vec 100 100, id: "id1", action: Just (vec 200 200) })
+        # insert "id1" ({ pos: vec 100 100, id: "id1", action: Nothing })
   }
