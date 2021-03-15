@@ -41,7 +41,6 @@ mapScreen state =
     squadClickEvents =
       state.characters
         # foldl (\xs c -> xs <> [ OnImageClick c.id (\st id_ -> SelectSquad (Just id_)) ]) []
-
   in
     Container
       { id: mapScreenId
@@ -55,13 +54,12 @@ mapScreen state =
               , pos: vec 0 0
               , size: size 800 600
               , onClick:
-                  [ \st vector ->
-                      -- if an owned squad is selected...
-                      SetSquadAction "id1" (Just vector)
+                  [ \st vector -> MapClick vector -- this is outdated state, remove param 
                   ]
               , onCreate:
                   [ OnUpdate onUpdateAction
-                  ] <> squadClickEvents
+                  ]
+                    <> squadClickEvents
               , children: squads
               }
           , Rect { pos: vec 0 400, size: size 800 200, color: "0xff0000" }

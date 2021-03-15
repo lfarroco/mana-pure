@@ -32,8 +32,8 @@ render state element parentContainer = do
       _ <- setContainerSize container c.size
       modify_ (\s -> s { containerIndex = insert c.id container s.containerIndex }) state
       for_ c.onClick \ev -> do
-        s <- read state
-        containerOnPointerUp container (\v -> ev state v) (runEvent_ state)
+        s <- read state -- remove this, as this is outdated state
+        containerOnPointerUp container (\v -> ev s v) (runEvent_ state)
       for_ c.children (\e -> render state e (Just container))
       for_ c.onCreate \ev -> do
         s <- read state

@@ -17,6 +17,7 @@ runEvent :: EventRunner PhaserState
 runEvent renderer stateRef event = do
   state <- read stateRef
   case event of
+    NoOp -> pure unit
     Destroy id -> do
       log $ ">>Destroy "
       case lookup id state.containerIndex of
@@ -113,10 +114,18 @@ runEvent renderer stateRef event = do
           imageOnPointerUp img
             ( \xy ->
                 let
-                  event_ = callback state id
+                  event_ = callback stateRef id
                 in
                   runEvent renderer stateRef event_
             )
+    MapClick vector -> do
+       st <- read stateRef
+       case st.selectedSquad of 
+            Just id_ -> let
+                            event_ = SetSquadAction id_ (Just vector)
+                        in
+                            runEvent renderer stateRef event_
+            Nothing -> pure unit
 
 distance :: Vector -> Vector -> Number
 distance from to = pow (from.x - to.x) 2.0 + pow (from.y + to.y) 2.0

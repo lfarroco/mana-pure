@@ -21,12 +21,13 @@ type Delta
   = Number
 
 data ManaEvent element containerId st
-  = Destroy containerId
+  = NoOp
+  | Destroy containerId
   | RenderScreen ScreenId
   | RemoveChildren containerId
   | RenderComponent containerId element
   | TweenImage String Vector Number
-  | OnImageClick String (st -> String -> ManaEvent element containerId st)
+  | OnImageClick String (Ref st -> String -> ManaEvent element containerId st)
   | OnUpdate (Ref st -> Time -> Delta -> Effect Unit) -- replace with event? (this way we centralized Eff creation)
   | RemoveOnUpdate
   -- map events
@@ -34,3 +35,4 @@ data ManaEvent element containerId st
   | CreateTileMap
   | SetSquadAction String (Maybe Vector)
   | SelectSquad (Maybe String)
+  | MapClick Vector

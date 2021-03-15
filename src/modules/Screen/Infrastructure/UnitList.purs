@@ -3,7 +3,7 @@ module Screen.Infrastructure.UnitList where
 import Prelude
 import Character.Domain as Character
 import Character.Infrastructure (characterIndex)
-import Core.Models (size, vec, Vector)
+import Core.Models (size, vec)
 import Data.Array (fromFoldable)
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Map (values)

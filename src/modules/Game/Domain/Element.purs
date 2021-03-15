@@ -3,7 +3,6 @@ module Game.Domain.Element where
 import Prelude
 import Core.Models (Size, Vector, size, vec)
 import Data.Maybe (Maybe)
-import Effect.Ref (Ref)
 import Game.Domain.Events (ManaEvent)
 
 data Element gameState
@@ -12,7 +11,8 @@ data Element gameState
     , pos :: Vector
     , size :: Size
     , children :: Array (Element gameState)
-    , onClick :: Array (Ref gameState -> Vector -> ManaEvent (Element gameState) ContainerId gameState)
+    -- we pass the state itself (and not a ref) to make events be able to just fire events, not performing do's
+    , onClick :: Array (gameState -> Vector -> ManaEvent (Element gameState) ContainerId gameState)
     , onCreate :: Array (ManaEvent (Element gameState) ContainerId gameState)
     }
   | Rect { pos :: Vector, size :: Size, color :: String }
