@@ -1,7 +1,6 @@
 module Main where
 
 import Prelude
-
 import Core.Models (vec)
 import Data.Map (empty, insert)
 import Data.Maybe (Maybe(..))
@@ -19,7 +18,7 @@ import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserScene, addContainer, 
 
 main :: Effect (Fiber Unit)
 main = do
-  game <- newGame 640 360
+  game <- newGame 1024 768
   mapState <- new $ vec 100 100
   launchAff do
     scene <- createScene { game, name: "main", assets }
@@ -27,7 +26,7 @@ main = do
     state <- (new $ initilState game scene root) # liftEffect
     runEvent render state initialEvent # liftEffect
   where
-  initialEvent = RenderScreen "mainScreen" 
+  initialEvent = RenderScreen "mainScreen"
 
   createRootContainer scene = addContainer scene (vec 0 0) # liftEffect
 
@@ -43,4 +42,6 @@ initilState game scene root =
   , characters:
       empty
         # insert "id1" ({ pos: vec 100 100, id: "id1", action: Nothing })
+        # insert "id2" ({ pos: vec 400 100, id: "id2", action: Nothing })
+  , selectedSquad: Nothing
   }

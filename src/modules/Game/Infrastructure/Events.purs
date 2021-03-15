@@ -9,7 +9,7 @@ import Effect.Ref (modify_, read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (addTilesetImage, addTween, createLayer, destroy, makeTileMap, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
+import Graphics.Phaser (addTilesetImage, addTween, createLayer, destroy, imageOnPointerUp, makeTileMap, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
 import Math (pow)
 import Screen.Infrastructure.Screens (screenIndex)
 
@@ -88,10 +88,13 @@ runEvent renderer stateRef event = do
       tileset <- addTilesetImage { tileMap, key: "tilemaps/kenney_64x64", tileWidth: 64, tileHeight: 64 }
       layer <- createLayer { tileMap, tileset }
       pure unit
+    SelectSquad mSquadId -> do
+      log ("selecting squad!!")
+      modify_ (\s -> s { selectedSquad = mSquadId }) stateRef
     SetSquadAction squadId mvector -> do
-      case mvector of 
-         Just v -> log $ show v 
-         Nothing -> pure unit
+      case mvector of
+        Just v -> log $ show v
+        Nothing -> pure unit
       case lookup squadId state.characters of
         Nothing -> pure unit
         Just squad ->
@@ -99,6 +102,21 @@ runEvent renderer stateRef event = do
             updatedSquad = squad { action = mvector }
           in
             modify_ (\s -> s { characters = insert squadId updatedSquad s.characters }) stateRef
+    OnImageClick id callback -> do
+      log "setting onImageClick!"
+      case lookup id state.imageIndex of
+        Nothing -> do
+          log "not found:*"
+          pure unit
+        Just img ->do
+          log "found!"
+          imageOnPointerUp img
+            ( \xy ->
+                let
+                  event_ = callback state id
+                in
+                  runEvent renderer stateRef event_
+            )
 
 distance :: Vector -> Vector -> Number
 distance from to = pow (from.x - to.x) 2.0 + pow (from.y + to.y) 2.0

@@ -1,7 +1,6 @@
 module Screen.Infrastructure.MapScreen where
 
 import Prelude
-
 import Character.Domain (Character)
 import Core.Models (IndexOf, Vector, size, vec)
 import Data.Foldable (foldl, for_)
@@ -18,29 +17,77 @@ import Math (abs)
 mapScreenId :: ContainerId
 mapScreenId = createContainerId "mapScreen"
 
+mapContainerId :: ContainerId
+mapContainerId = createContainerId "mapContainer"
+
+mapUIContainer :: ContainerId
+mapUIContainer = createContainerId "mapUIContainer"
+
 mapScreen :: PhaserState -> (Element PhaserState)
 mapScreen state =
-  Container
-    { id: mapScreenId
-    , pos: vec 0 0
-    , size: size 800 600
-    , onClick:
-        [ \st vector ->
-            SetSquadAction "id1" (Just vector)
-        ]
-    , onCreate:
-        [ OnUpdate onUpdateAction
-        ]
-    , children:
-        foldl
-          ( \xs c ->
-              xs
-                <> [ Image { id: c.id, pos: c.pos, texture: "chara/head_male", tint: Nothing }
+  let
+    squads =
+      foldl
+        ( \xs c ->
+            xs
+              <> [ Image
+                    { id: c.id, pos: c.pos, texture: "chara/head_male", tint: Nothing
+                    }
+                ]
+        )
+        []
+        state.characters
+
+    squadClickEvents =
+      state.characters
+        # foldl (\xs c -> xs <> [ OnImageClick c.id (\st id_ -> SelectSquad (Just id_)) ]) []
+
+  in
+    Container
+      { id: mapScreenId
+      , pos: vec 0 0
+      , size: size 800 600
+      , onClick: []
+      , onCreate: []
+      , children:
+          [ Container
+              { id: mapContainerId
+              , pos: vec 0 0
+              , size: size 800 600
+              , onClick:
+                  [ \st vector ->
+                      -- if an owned squad is selected...
+                      SetSquadAction "id1" (Just vector)
                   ]
-          )
-          []
-          state.characters
-    }
+              , onCreate:
+                  [ OnUpdate onUpdateAction
+                  ] <> squadClickEvents
+              , children: squads
+              }
+          , Rect { pos: vec 0 400, size: size 800 200, color: "0xff0000" }
+          , Container
+              { id: mapUIContainer
+              , pos: vec 0 400
+              , size: size 800 200
+              , onClick: []
+              , onCreate: []
+              , children:
+                  [ selectedSquadInfo "id1" state
+                  ]
+              }
+          ]
+      }
+
+selectedSquadInfo ::
+  forall t12 t15 t9.
+  t9 ->
+  { selectedSquad :: Maybe String
+  | t12
+  } ->
+  Element t15
+selectedSquadInfo id_ state = case state.selectedSquad of
+  Just sqd -> Text { pos: vec 100 0, text: sqd }
+  Nothing -> Text { pos: vec 0 0, text: "" }
 
 positions :: IndexOf Character -> IndexOf { character :: Character, pos :: Vector }
 positions charas = map (\character -> { character, pos: vec (character.age * 100) 100 }) charas
@@ -56,7 +103,7 @@ onUpdateAction st time delta = do
         let
           step = getStep c.pos target 1.0
 
-          arrived =  abs step.x + abs step.y < 0.98
+          arrived = abs step.x + abs step.y < 0.98
         in
           do
             -- how about mutating everything in a single modify_?
