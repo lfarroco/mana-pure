@@ -112,8 +112,33 @@ foreign import onUpdate :: { scene :: PhaserScene, callback :: Number -> Number 
 
 foreign import removeOnUpdate :: PhaserScene -> Effect Unit
 
-foreign import makeTileMap :: { scene :: PhaserScene, data:: Array (Array Int), tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileMap
+foreign import makeTileMap :: { scene :: PhaserScene, data :: Array (Array Int), tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileMap
 
 foreign import addTilesetImage :: { tileMap :: PhaserTileMap, key :: String, tileWidth :: Int, tileHeight :: Int } -> Effect PhaserTileSet
 
-foreign import createLayer :: { tileMap :: PhaserTileMap, tileset:: PhaserTileSet } -> Effect PhaserLayer
+foreign import createLayer :: { tileMap :: PhaserTileMap, tileset :: PhaserTileSet } -> Effect PhaserLayer
+
+foreign import setMainCameraBounds :: { scene :: PhaserScene, x :: Number, y :: Number, width :: Number, height :: Number } -> Effect Unit
+
+
+-- IDEA: always move unit to center of cell
+-- mark selected cell
+-- will remove the problem of having the unit moving to the "middle" of square before moving
+
+-- place this inside onUpdate
+-- camera drag
+-- if (this.game.input.activePointer.isDown) {
+--   if (this.game.origDragPoint) {
+-- 	// move the camera by the amount the mouse has moved since last update
+-- 	this.cameras.main.scrollX +=
+-- 	  this.game.origDragPoint.x - this.game.input.activePointer.position.x;
+-- 	this.cameras.main.scrollY +=
+-- 	  this.game.origDragPoint.y - this.game.input.activePointer.position.y;
+--   } // set new drag origin to current position
+--   this.game.origDragPoint = this.game.input.activePointer.position.clone();
+-- } else {
+--   this.game.origDragPoint = null;
+-- }
+
+
+

@@ -281,3 +281,8 @@ exports.createLayer = function ({ tileMap, tileset }) {
     return tileMap.createLayer(0, tileset, 0, 0);
   };
 };
+
+exports.setMainCameraBounds = ({scene, x, y, width, height})=>{
+  scene.cameras.main.setBounds(x, y, width, height);
+  return {}
+}
