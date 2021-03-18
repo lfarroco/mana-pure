@@ -58,21 +58,21 @@ getNeighbors :: Point -> Matrix Cell -> Array Point
 getNeighbors (Point x y) matrix =
   let
     g xx yy = case Matrix.get xx yy matrix of
-      Just v -> 
+      Just v ->
         if v == Rock || v == Wall then
           Nothing
         else
           Just $ Point xx yy
       Nothing -> Nothing
   in
-    mapMaybe identity [ g x (y - 1), g (x - 1) y, g (x + 1) y, g x (y + 1) ]
+    mapMaybe identity [ g x (y - 1), g (x - 1) y, g (x + 1) y, g x (y + 1) , g (x-1)(y-1), g (x+1)(y+1), g(x+1)(y-1), g(x-1)(y+1)]
 
 grid :: Matrix Cell
 grid =
   let
     mat = Matrix.repeat 10 10 (Grass)
   in
-    case Matrix.set 1 2 Wall mat of
+    case Matrix.set 2 2 Wall mat of
       Just m -> m
       _ -> mat
 
@@ -110,7 +110,6 @@ look open_set cost_map came_from target world =
         # sortWith (\(Tuple k v) -> v)
         # head
         # map (\(Tuple point int) -> point)
-  --current = fromMaybe start head_
   in
     case mhead of
       Just current ->
@@ -125,8 +124,11 @@ look open_set cost_map came_from target world =
                   ( \xs next ->
                       let
                         current_cost = Map.lookup current xs.cost_map
+                        is_diagonal = case heuristic current next of 
+                                            Just n -> n == 20
+                                            _ -> false
 
-                        new_cost = current_cost # map \n -> n + 1 -- cost to move to neighbor, since the beggining (current node + 1 , or 1.4 to diagonal)
+                        new_cost = current_cost # map \n -> if is_diagonal then n + 14 else n + 10 -- cost to move to neighbor, since the beggining (current node + 1 , or 1.4 to diagonal)
 
                         neigh_cost = Map.lookup next xs.cost_map
                       in
@@ -146,20 +148,9 @@ look open_set cost_map came_from target world =
             look res.open_set res.cost_map res.came_from target world
       Nothing -> { came_from, cost_map, openSetWithoutCurrent: open_set, cause: "empty openset!!" }
 
-printMatrix :: forall t28 t35. Show t28 => Applicative t35 => MonadEffect t35 => Matrix t28 -> t35 Unit
-printMatrix matrix =
-  let
-    rows =
-      map show matrix
-        # Matrix.rows
-        # map (intercalate "")
-  in
-    for_ rows (\s -> log s)
-
 showPath :: Matrix PathCell
 showPath =
   let
-    -- traceme array point
     mtx = Matrix.repeat (Matrix.width grid) (Matrix.height grid) Empty
   in
     traceme
@@ -206,12 +197,12 @@ abs n =
   if n == 0 then
     0
   else
-    (n * n) / n
+    ((n * n) / n ) * 10
 
+-- euclidean distance
 heuristic :: Point -> Point -> Maybe Int
 heuristic (Point x y) (Point p1 p2) = Just (abs (p1 - x) + abs (p2 - y))
 
---testGrid :: Map Point Point
 testGrid ::
   { came_from :: Map Point Point
   , cause :: String
