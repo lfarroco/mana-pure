@@ -72,15 +72,13 @@ getNeighbors (Point x y) matrix =
   in
     mapMaybe getCell directions
 
--- TODO: add maximum depth, change Int to Number (to use sqrt2 instead of 14 for distance)
-look ::
-  Point ->
+findPath ::
   Map Point Number ->
   Map Point Number ->
   Map Point Point ->
   Point ->
   Matrix Cell -> Array Point
-look start open_set cost_map came_from target world =
+findPath open_set cost_map came_from target world =
   let
     mhead =
       open_set
@@ -90,6 +88,7 @@ look start open_set cost_map came_from target world =
         # map (\(Tuple point int) -> point)
   in
     case mhead of
+      Nothing -> []
       Just current ->
         let
           openSetWithoutCurrent = open_set # update (\_ -> Nothing) current
@@ -107,7 +106,7 @@ look start open_set cost_map came_from target world =
                           Just n -> n == 2.0
                           _ -> false
 
-                        -- cost to move to neighbor, since the beggining 
+                        -- cost to move to neighbor, since the start 
                         -- (current node + 1.0 , or 1.4 to diagonal)
                         new_cost =
                           current_cost
@@ -130,22 +129,14 @@ look start open_set cost_map came_from target world =
                   { open_set: openSetWithoutCurrent, cost_map, came_from }
         in
           if current == target then
-            traceParent target start came_from # reverse
+            traceParent target res.came_from # reverse
           else
-            look start res.open_set res.cost_map res.came_from target world
-      Nothing -> []
+            findPath res.open_set res.cost_map res.came_from target world
 
-traceParent :: Point -> Point -> Map Point Point -> Array Point
-traceParent curr origin index =
-  if curr == origin then
-    []
-  else
-    let
-      res = Map.lookup curr index
-    in
-      case res of
-        Just r -> [ r ] <> (traceParent r origin index)
-        Nothing -> []
+traceParent :: Point -> Map Point Point -> Array Point
+traceParent point index = case Map.lookup point index of
+  Just prev -> [ prev ] <> (traceParent prev index)
+  Nothing -> []
 
 -- euclidean distance
 heuristic :: Point -> Point -> Maybe Number
@@ -156,6 +147,18 @@ heuristic (Point x y) (Point p1 p2) =
         + abs ((toNumber p2) - (toNumber y))
     )
 
+runAStar :: Point -> Point -> Matrix Cell -> Array Point
+runAStar start goal grid =
+  let
+    openSet = Map.empty # Map.insert start 0.0
+
+    costMap = Map.empty # insert start 0.0
+
+    cameFrom = Map.empty
+  in
+    findPath openSet costMap cameFrom goal grid
+
+-- internals
 sumMaybe :: Maybe Number -> Maybe Number -> Maybe Number
 sumMaybe a b =
   let
@@ -166,24 +169,16 @@ sumMaybe a b =
 ----------------------------------------
 --------------- testing-----------------
 ----------------------------------------
-start :: Point
-start = Point 1 1
-
-end :: Point
-end = Point  7 7
-
-solution :: Array Point
-solution =
-  look
-    start
-    (Map.empty # Map.insert start 0.0) -- openSet
-    (Map.empty # insert start 0.0) -- costMap
-    (Map.empty # insert start start) -- cameFrom
-    end -- goal
-    testWorld
-
 printTest :: Matrix PathCell
-printTest = showPath start end solution testWorld
+printTest =
+  let
+    start = Point 1 1
+
+    goal = Point 8 8
+
+    path = runAStar start goal testWorld
+  in
+    showPath start goal path testWorld
 
 testWorld :: Matrix Cell
 testWorld =
@@ -199,8 +194,6 @@ testWorld =
       # setCell 2 1 Wall
       # setCell 2 2 Wall
       # setCell 2 3 Wall
-
-
       # setCell 4 2 Wall
       # setCell 4 3 Wall
       # setCell 4 4 Wall
@@ -209,13 +202,12 @@ testWorld =
       # setCell 4 7 Wall
       # setCell 4 8 Wall
       # setCell 4 9 Wall
-
       # setCell 6 4 Wall
       # setCell 6 5 Wall
       # setCell 6 6 Wall
 
 showPath :: Point -> Point -> Array Point -> Matrix Cell -> Matrix PathCell
-showPath origin goal path world =
+showPath start goal path world =
   let
     mtx = Matrix.repeat (Matrix.width world) (Matrix.height world) Empty
   in
@@ -236,7 +228,7 @@ showPath origin goal path world =
                   Rock -> Blocked
                   Wall -> Blocked
               in
-                if Point x y == origin then
+                if Point x y == start then
                   Start
                 else if Point x y == goal then
                   Goal
