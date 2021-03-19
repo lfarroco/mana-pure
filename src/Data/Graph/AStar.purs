@@ -1,23 +1,24 @@
-module Data.Graph.Astar where
+module Data.Graph.AStar where
 
 -- Based on the implementation at https://www.redblobgames.com/pathfinding/a-star/introduction.html
 import Prelude
-import Data.Array (foldl, head, mapMaybe, sortWith, intercalate, reverse)
-import Data.Foldable (for_)
-import Data.Map (Map, empty, insert, update)
+import Control.Apply (lift2)
+import Data.Array (filter, foldl, head, mapMaybe, reverse, sortWith)
+import Data.Int (toNumber)
+import Data.Map (Map, insert, update)
 import Data.Map as Map
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (Tuple(..))
-import Effect.Class (class MonadEffect)
-import Effect.Class.Console (log)
+import Math (abs)
 import Matrix (Matrix)
 import Matrix as Matrix
 
+-- can be extended to "Point x y weight"
 data Point
   = Point Int Int
 
 instance showPoint :: Show Point where
-  show (Point x y) = "(" <> show x <> "," <> show y <> ")"
+  show (Point x y) = "Point " <> show x <> " " <> show y
 
 derive instance eqPoint :: Eq Point
 
@@ -57,52 +58,29 @@ type Grid
 getNeighbors :: Point -> Matrix Cell -> Array Point
 getNeighbors (Point x y) matrix =
   let
-    g xx yy = case Matrix.get xx yy matrix of
-      Just v ->
-        if v == Rock || v == Wall then
+    getCell (Point dx dy) = case Matrix.get (dx + x) (dy + y) matrix of
+      Just cell ->
+        if cell == Rock || cell == Wall then
           Nothing
         else
-          Just $ Point xx yy
+          Just $ Point (dx + x) (dy + y)
       Nothing -> Nothing
+
+    ns = [ -1, 0, 1 ]
+
+    directions = lift2 Point ns ns # filter (\p -> p /= Point 0 0)
   in
-    mapMaybe identity [ g x (y - 1), g (x - 1) y, g (x + 1) y, g x (y + 1) , g (x-1)(y-1), g (x+1)(y+1), g(x+1)(y-1), g(x-1)(y+1)]
+    mapMaybe getCell directions
 
-grid :: Matrix Cell
-grid =
-  let
-    mat = Matrix.repeat 10 10 (Grass)
-  in
-    case Matrix.set 2 2 Wall mat of
-      Just m -> m
-      _ -> mat
-
-start :: Point
-start = Point 1 1
-
-finish :: Point
-finish = Point 4 4
-
-costMap :: Map Point Int
-costMap = empty # insert start 0
-
-cameFrom :: forall t141. Map Point (Maybe t141)
-cameFrom = empty # insert start Nothing
-
-openSet :: Map Point Int
-openSet = empty # insert start 0 -- priority queue (open set)
-
+-- TODO: add maximum depth, change Int to Number (to use sqrt2 instead of 14 for distance)
 look ::
-  Map Point Int ->
-  Map Point Int ->
+  Point ->
+  Map Point Number ->
+  Map Point Number ->
   Map Point Point ->
   Point ->
-  Matrix Cell ->
-  { came_from :: Map Point Point
-  , cause :: String
-  , cost_map :: Map Point Int
-  , openSetWithoutCurrent :: Map Point Int
-  }
-look open_set cost_map came_from target world =
+  Matrix Cell -> Array Point
+look start open_set cost_map came_from target world =
   let
     mhead =
       open_set
@@ -124,17 +102,26 @@ look open_set cost_map came_from target world =
                   ( \xs next ->
                       let
                         current_cost = Map.lookup current xs.cost_map
-                        is_diagonal = case heuristic current next of 
-                                            Just n -> n == 20
-                                            _ -> false
 
-                        new_cost = current_cost # map \n -> if is_diagonal then n + 14 else n + 10 -- cost to move to neighbor, since the beggining (current node + 1 , or 1.4 to diagonal)
+                        is_diagonal = case heuristic current next of
+                          Just n -> n == 2.0
+                          _ -> false
+
+                        -- cost to move to neighbor, since the beggining 
+                        -- (current node + 1.0 , or 1.4 to diagonal)
+                        new_cost =
+                          current_cost
+                            # map \n ->
+                                if is_diagonal then
+                                  n + 1.4
+                                else
+                                  n + 1.0
 
                         neigh_cost = Map.lookup next xs.cost_map
                       in
                         if neigh_cost == Nothing || new_cost < neigh_cost then
-                          { open_set: insert next (fromMaybe 0 (sumMaybe new_cost (heuristic next target))) xs.open_set
-                          , cost_map: insert next (fromMaybe 0 new_cost) xs.cost_map
+                          { open_set: insert next (fromMaybe 0.0 (sumMaybe new_cost (heuristic next target))) xs.open_set
+                          , cost_map: insert next (fromMaybe 0.0 new_cost) xs.cost_map
                           , came_from: insert next current xs.came_from
                           }
                         else
@@ -143,42 +130,10 @@ look open_set cost_map came_from target world =
                   { open_set: openSetWithoutCurrent, cost_map, came_from }
         in
           if current == target then
-            { came_from, cost_map, openSetWithoutCurrent, cause: "found!!!" }
+            traceParent target start came_from # reverse
           else
-            look res.open_set res.cost_map res.came_from target world
-      Nothing -> { came_from, cost_map, openSetWithoutCurrent: open_set, cause: "empty openset!!" }
-
-showPath :: Matrix PathCell
-showPath =
-  let
-    mtx = Matrix.repeat (Matrix.width grid) (Matrix.height grid) Empty
-  in
-    traceme
-      # foldl
-          ( \xs (Point x y) -> case Matrix.set x y Walk xs of
-              Just m -> m
-              _ -> xs
-          )
-          mtx
-      # Matrix.indexedMap
-          ( \x y val ->
-              let
-                cellType = fromMaybe Grass $ Matrix.get x y grid
-
-                next = case cellType of
-                  Grass -> Empty
-                  Rock -> Blocked
-                  Wall -> Blocked
-              in
-                if Point x y == start then
-                  Start
-                else if Point x y == finish then
-                  Goal
-                else if val == Walk then
-                  val
-                else
-                  next
-          )
+            look start res.open_set res.cost_map res.came_from target world
+      Nothing -> []
 
 traceParent :: Point -> Point -> Map Point Point -> Array Point
 traceParent curr origin index =
@@ -192,31 +147,101 @@ traceParent curr origin index =
         Just r -> [ r ] <> (traceParent r origin index)
         Nothing -> []
 
-abs :: Int -> Int
-abs n =
-  if n == 0 then
-    0
-  else
-    ((n * n) / n ) * 10
-
 -- euclidean distance
-heuristic :: Point -> Point -> Maybe Int
-heuristic (Point x y) (Point p1 p2) = Just (abs (p1 - x) + abs (p2 - y))
+heuristic :: Point -> Point -> Maybe Number
+heuristic (Point x y) (Point p1 p2) =
+  Just
+    ( abs
+        ((toNumber p1) - (toNumber x))
+        + abs ((toNumber p2) - (toNumber y))
+    )
 
-testGrid ::
-  { came_from :: Map Point Point
-  , cause :: String
-  , cost_map :: Map Point Int
-  , openSetWithoutCurrent :: Map Point Int
-  }
-testGrid = look (Map.empty # Map.insert start 0) (Map.empty # insert start 0) (Map.empty # insert start start) finish grid
-
-traceme :: Array Point
-traceme = traceParent finish start testGrid.came_from # reverse
-
-sumMaybe :: Maybe Int -> Maybe Int -> Maybe Int
+sumMaybe :: Maybe Number -> Maybe Number -> Maybe Number
 sumMaybe a b =
   let
-    f_ = fromMaybe 0
+    f_ = fromMaybe 0.0
   in
     Just $ f_ a + f_ b
+
+----------------------------------------
+--------------- testing-----------------
+----------------------------------------
+start :: Point
+start = Point 1 1
+
+end :: Point
+end = Point  7 7
+
+solution :: Array Point
+solution =
+  look
+    start
+    (Map.empty # Map.insert start 0.0) -- openSet
+    (Map.empty # insert start 0.0) -- costMap
+    (Map.empty # insert start start) -- cameFrom
+    end -- goal
+    testWorld
+
+printTest :: Matrix PathCell
+printTest = showPath start end solution testWorld
+
+testWorld :: Matrix Cell
+testWorld =
+  let
+    mat = Matrix.repeat 10 10 (Grass)
+
+    setCell x y v matrix = case Matrix.set x y v matrix of
+      Just m -> m
+      _ -> matrix
+  in
+    mat
+      # setCell 2 0 Wall
+      # setCell 2 1 Wall
+      # setCell 2 2 Wall
+      # setCell 2 3 Wall
+
+
+      # setCell 4 2 Wall
+      # setCell 4 3 Wall
+      # setCell 4 4 Wall
+      # setCell 4 5 Wall
+      # setCell 4 6 Wall
+      # setCell 4 7 Wall
+      # setCell 4 8 Wall
+      # setCell 4 9 Wall
+
+      # setCell 6 4 Wall
+      # setCell 6 5 Wall
+      # setCell 6 6 Wall
+
+showPath :: Point -> Point -> Array Point -> Matrix Cell -> Matrix PathCell
+showPath origin goal path world =
+  let
+    mtx = Matrix.repeat (Matrix.width world) (Matrix.height world) Empty
+  in
+    path
+      # foldl
+          ( \xs (Point x y) -> case Matrix.set x y Walk xs of
+              Just m -> m
+              _ -> xs
+          )
+          mtx
+      # Matrix.indexedMap
+          ( \x y val ->
+              let
+                cellType = fromMaybe Grass $ Matrix.get x y world
+
+                next = case cellType of
+                  Grass -> Empty
+                  Rock -> Blocked
+                  Wall -> Blocked
+              in
+                if Point x y == origin then
+                  Start
+                else if Point x y == goal then
+                  Goal
+                else if val == Walk then
+                  val
+                else
+                  next
+          )
