@@ -5,7 +5,7 @@ import Prelude
 import Control.Apply (lift2)
 import Data.Array (filter, foldl, head, mapMaybe, reverse, sortWith)
 import Data.Int (toNumber)
-import Data.Map (Map, insert, update)
+import Data.Map (Map)
 import Data.Map as Map
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (Tuple(..))
@@ -52,8 +52,7 @@ instance showCell :: Show Cell where
   show Rock = " O "
   show Wall = "█ "
 
-type Grid
-  = Map.Map Point Cell
+type Grid = Map Point Cell
 
 getNeighbors :: Point -> Matrix Cell -> Array Point
 getNeighbors (Point x y) matrix =
@@ -78,93 +77,95 @@ findPath ::
   Map Point Point ->
   Point ->
   Matrix Cell -> Array Point
-findPath open_set cost_map came_from target world =
+findPath openSet costMap cameFrom target world =
   let
     mhead =
-      open_set
+      openSet
         # Map.toUnfoldable
         # sortWith (\(Tuple k v) -> v)
         # head
-        # map (\(Tuple point int) -> point)
+        # map (\(Tuple point priority) -> point)
   in
     case mhead of
       Nothing -> []
       Just current ->
         let
-          openSetWithoutCurrent = open_set # update (\_ -> Nothing) current
+          openSetWithoutCurrent = openSet # Map.update (\_ -> Nothing) current
 
-          neighs = getNeighbors current world
-
-          res =
-            neighs
+          state =
+            getNeighbors current world
               # foldl
-                  ( \xs next ->
+                  ( \state' next ->
                       let
-                        current_cost = Map.lookup current xs.cost_map
+                        cost = Map.lookup current state'.costMap # fromMaybe 0.0
 
-                        is_diagonal = case heuristic current next of
-                          Just n -> n == 2.0
-                          _ -> false
+                        isDiagonal = distance current next == 2.0
 
-                        -- cost to move to neighbor, since the start 
-                        -- (current node + 1.0 , or 1.4 to diagonal)
-                        new_cost =
-                          current_cost
-                            # map \n ->
-                                if is_diagonal then
-                                  n + 1.4
-                                else
-                                  n + 1.0
+                        moveToNextCost =
+                          if isDiagonal then
+                            cost + 1.4
+                          else
+                            cost + 1.0
 
-                        neigh_cost = Map.lookup next xs.cost_map
+                        nextCost = Map.lookup next state'.costMap
+
+                        nextIsNew = nextCost == Nothing
+
+                        foundABetterPath = Just moveToNextCost < nextCost
+
+                        heuristic = distance next target
+
+                        totalCost = moveToNextCost + heuristic
                       in
-                        if neigh_cost == Nothing || new_cost < neigh_cost then
-                          { open_set: insert next (fromMaybe 0.0 (sumMaybe new_cost (heuristic next target))) xs.open_set
-                          , cost_map: insert next (fromMaybe 0.0 new_cost) xs.cost_map
-                          , came_from: insert next current xs.came_from
+                        if nextIsNew || foundABetterPath then
+                          { openSet: Map.insert next totalCost state'.openSet
+                          , costMap: Map.insert next moveToNextCost state'.costMap
+                          , cameFrom: Map.insert next current state'.cameFrom
                           }
                         else
-                          xs
+                          state'
                   )
-                  { open_set: openSetWithoutCurrent, cost_map, came_from }
+                  { openSet: openSetWithoutCurrent, costMap, cameFrom }
         in
           if current == target then
-            traceParent target res.came_from # reverse
+            traceParent target state.cameFrom # reverse
           else
-            findPath res.open_set res.cost_map res.came_from target world
+            findPath state.openSet state.costMap state.cameFrom target world
 
 traceParent :: Point -> Map Point Point -> Array Point
 traceParent point index = case Map.lookup point index of
   Just prev -> [ prev ] <> (traceParent prev index)
   Nothing -> []
 
--- euclidean distance
-heuristic :: Point -> Point -> Maybe Number
-heuristic (Point x y) (Point p1 p2) =
-  Just
-    ( abs
-        ((toNumber p1) - (toNumber x))
-        + abs ((toNumber p2) - (toNumber y))
-    )
+distance :: Point -> Point -> Number
+distance (Point x y) (Point p1 p2) =
+  let
+    t = toNumber
+
+    x' = abs (t p1) - (t x)
+
+    y' = abs (t p2) - (t y)
+  in
+    x' + y'
 
 runAStar :: Point -> Point -> Matrix Cell -> Array Point
 runAStar start goal grid =
   let
     openSet = Map.empty # Map.insert start 0.0
 
-    costMap = Map.empty # insert start 0.0
+    costMap = Map.empty # Map.insert start 0.0
 
     cameFrom = Map.empty
   in
     findPath openSet costMap cameFrom goal grid
 
 -- internals
-sumMaybe :: Maybe Number -> Maybe Number -> Maybe Number
+sumMaybe :: Maybe Number -> Maybe Number -> Number
 sumMaybe a b =
   let
-    f_ = fromMaybe 0.0
+    n = fromMaybe 0.0
   in
-    Just $ f_ a + f_ b
+    n a + n b
 
 ----------------------------------------
 --------------- testing-----------------
