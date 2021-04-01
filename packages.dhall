@@ -115,3 +115,10 @@ in  upstream
       ,version =
           "v2.0.1"
       }
+  with purescript-phaser =
+      { dependencies = ["aff", "effect"]
+      ,repo = 
+          "https://github.com/lfarroco/purescript-phaser.git"
+      ,version =
+          "main"
+      }

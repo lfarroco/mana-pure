@@ -1,6 +1,7 @@
 module Screen.Infrastructure.MapScreen where
 
 import Prelude
+
 import Character.Domain (Character)
 import Core.Models (IndexOf, Vector, size, vec)
 import Data.Foldable (foldl, for_)
@@ -11,7 +12,7 @@ import Effect.Ref (Ref, modify_, read)
 import Game.Domain.Element (ContainerId, Element(..), createContainerId)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
-import Graphics.Phaser (setImagePosition)
+import Graphics.Phaser.GameObject (setPosition)
 import Math (abs)
 
 mapScreenId :: ContainerId
@@ -103,7 +104,7 @@ onUpdateAction st time delta = do
 
           arrived = abs step.x + abs step.y < 0.98
         in
-          do
+          void do
             -- how about mutating everything in a single modify_?
             modify_
               ( \s ->
@@ -124,7 +125,7 @@ onUpdateAction st time delta = do
                     }
               )
               st
-            setImagePosition c.pos img
+            setPosition c.pos img
 
 getStep :: Vector -> Vector -> Number -> Vector
 getStep from to speed =

@@ -1,6 +1,7 @@
 module Game.Infrastructure.Events where
 
 import Prelude
+
 import Core.Models (Vector)
 import Data.Map (insert, lookup)
 import Data.Maybe (Maybe(..))
@@ -8,7 +9,10 @@ import Effect.Ref (modify_, read)
 import Game.Domain.Events (ManaEvent(..))
 import Game.Infrasctruture.PhaserState (PhaserState)
 import Game.Infrastructure.Models (EventRunner)
-import Graphics.Phaser (addTilesetImage, addTween, createLayer, destroy, imageOnPointerUp, makeTileMap, onUpdate, removeChildren, removeOnUpdate, setImagePosition)
+import Graphics.Phaser.Container (removeChildren)
+import Graphics.Phaser.GameObject (setPosition)
+import Graphics.Phaser.TileMap (addTilesetImage, createLayer, makeTileMap)
+import Graphics.Phaser.Tween (addTween)
 import Math (pow)
 import Screen.Infrastructure.Screens (screenIndex)
 
@@ -19,7 +23,8 @@ runEvent renderer stateRef event = do
     NoOp -> pure unit
     Destroy id -> do
       case lookup id state.containerIndex of
-        Just s -> destroy s
+        Just s ->  pure unit
+          --destroy s
         Nothing -> pure unit
     RenderScreen id -> do
       case lookup id (screenIndex state) of
@@ -55,12 +60,14 @@ runEvent renderer stateRef event = do
           pure unit
         Nothing -> pure unit
     OnUpdate callback -> do
-      onUpdate { callback: callback stateRef, scene: state.scene }
+       pure unit
+      --onUpdate { callback: callback stateRef, scene: state.scene }
     RemoveOnUpdate -> do
-      removeOnUpdate state.scene
+       pure unit
+      --removeOnUpdate state.scene
     MoveImage id vec -> do
       case lookup id state.imageIndex of
-        Just img -> do setImagePosition vec img
+        Just img -> void do setPosition vec img
         Nothing -> pure unit
     CreateTileMap -> do
       tileMap <-
@@ -104,13 +111,14 @@ runEvent renderer stateRef event = do
         Nothing -> do
           pure unit
         Just img -> do
-          imageOnPointerUp img
-            ( \xy ->
-                let
-                  event_ = callback stateRef id
-                in
-                  runEvent renderer stateRef event_
-            )
+           pure unit
+          -- imageOnPointerUp img
+          --   ( \xy ->
+          --       let
+          --         event_ = callback stateRef id
+          --       in
+          --         runEvent renderer stateRef event_
+          --   )
     MapClick vector -> do
       st <- read stateRef
       case st.selectedSquad of

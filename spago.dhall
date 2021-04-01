@@ -21,6 +21,7 @@ You can edit this file as you like.
   , "web-events"
   , "web-html"
   , "purescript-astar"
+  , "purescript-phaser"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

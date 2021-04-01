@@ -4,7 +4,7 @@ import Core.Models (State, Vector)
 import Data.Map (Map)
 import Data.Maybe (Maybe)
 import Game.Domain.Element (ContainerId)
-import Graphics.Phaser (PhaserContainer, PhaserGame, PhaserImage, PhaserScene)
+import Phaser.Graphics.ForeignTypes (PhaserContainer, PhaserGame, PhaserImage, PhaserScene)
 
 type PhaserState
   = State
