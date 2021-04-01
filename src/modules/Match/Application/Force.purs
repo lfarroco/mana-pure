@@ -6,7 +6,6 @@ import Character.Domain as Chara
 import Data.Map (empty, insert)
 import Match.Domain.Squad (Squad)
 
-
 createForce :: String -> String -> String -> Force
 createForce id_ name color =
   { id: Id id_
