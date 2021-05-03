@@ -1,4 +1,4 @@
-module Job.Domain where
+module Job.Model where
 
 newtype Job
   = Job

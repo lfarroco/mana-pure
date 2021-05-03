@@ -1,4 +1,4 @@
-module Screen.UnitList where
+module Screen.SquadList where
 
 import Prelude
 import Data.Array (head, tail)
@@ -11,18 +11,21 @@ import UI.Button (button)
 import UI.Text (customText)
 
 key :: String
-key = "UnitListScreen"
+key = "SquadListScreen"
 
-data MainScreenEvents
+data Events
   = NoOp
-  | GoToUnitList
 
 type Model
-  = { heroes :: Array { id :: String, name :: String }
+  = { mainSceneKey :: String
+    , squads :: Array { id :: String, leader :: String }
     }
 
 state :: Model
-state = { heroes: [] }
+state =
+  { mainSceneKey: "main"
+  , squads: [ { leader: "Khastan", id: "1" }, { leader: "Derpino", id: "2" } ]
+  }
 
 preload :: PhaserScene -> Effect Unit
 preload =
@@ -43,17 +46,17 @@ create :: PhaserScene -> Model -> Effect Unit
 create scn model =
   let
     render hs n = case head hs of
-      Just hero ->
+      Just squad ->
         void do
-          _ <- row hero.name n scn
+          _ <- row squad.leader n scn
           case (tail hs) of
             Just t -> render t (n + 1.0)
             Nothing -> pure unit
       _ -> do pure unit
   in
     void do
-      render model.heroes 0.0
-      button { x: 700, y: 400 } "Return" (\_ -> startByKey "main" {} scn) scn
+      render model.squads 0.0
+      button { x: 700, y: 400 } "Return" (\_ -> startByKey model.mainSceneKey {} scn) scn
 
 scene :: SceneConfig Model
 scene =

@@ -1,7 +1,7 @@
-module Match.Domain.City where
+module Match.Model.City where
 
 import Core.Models (BoardSquare)
-import Match.Domain.Force as Force 
+import Match.Model.Force as Force 
 
 newtype Id = Id String
 newtype Name = CityName String
@@ -9,12 +9,12 @@ newtype Name = CityName String
 type City
   = { id :: Id
     , name :: Name 
-    , type_ :: Type
+    , type_ :: CityType
     , pos :: BoardSquare
     , controlledBy :: Force.Id
     }
 
-data Type
+data CityType
   = Castle
   | Town
   | Village

@@ -1,8 +1,8 @@
-module Skill.Domain where
+module Skill.Model where
 
 import Prelude
 import Core.BoundedNumber (BoundedNumber, createBoundedNumber)
-import Character.Domain (Character)
+import Hero.Model (Hero)
 import Core.Models (Vector)
 
 data Allegiance
@@ -37,10 +37,10 @@ type ListOf
   = Array
 
 type Self
-  = Character
+  = Hero
 
 type Target
-  = Character
+  = Hero
 
 type Name
   = String

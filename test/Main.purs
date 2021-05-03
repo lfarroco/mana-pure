@@ -1,11 +1,13 @@
 module Test.Main where
 
-import Effect (Effect)
 import Prelude
+
+import Effect (Effect)
 import Test.Core.BoundedNumber (boundedTests)
---import Test.UI.Button (testButton)
+import Test.Theater.Isometric (isometricTests)
 
 main :: Effect Unit
 main = do
   boundedTests
+  isometricTests
 

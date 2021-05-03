@@ -1,6 +1,6 @@
-module Match.Domain.Battlefield where
+module Match.Model.Battlefield where
 
-import Match.Domain.City (City)
+import Match.Model.City (City)
 
 import Data.Maybe (Maybe)
 import Matrix (Matrix)

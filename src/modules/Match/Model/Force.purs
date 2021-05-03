@@ -1,12 +1,12 @@
-module Match.Domain.Force where
+module Match.Model.Force where
 
 import Prelude
 
-import Character.Domain (Character)
-import Character.Domain as Character
-import Core.Models (IndexOf)
+import Hero.Model (Hero)
+import Hero.Model as Hero
+import Match.Model.Squad (Squad)
+
 import Data.Map (Map)
-import Match.Domain.Squad (Squad)
 
 newtype Id
   = Id String
@@ -24,6 +24,6 @@ type Force
   = { id :: Id
     , name :: Name
     , color :: Color
-    , characters :: Map Character.Id Character
-    , squads :: Map Character.Id Squad
+    , heroes :: Map Hero.Id Hero
+    , squads :: Map Hero.Id Squad
     }

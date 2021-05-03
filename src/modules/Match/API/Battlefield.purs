@@ -1,8 +1,8 @@
-module Match.Application.Battlefield where
+module Match.API.Battlefield where
 
 import Data.Maybe (Maybe(..))
-import Match.Domain.Battlefield (Battlefield, Tile(..))
-import Match.Domain.City (City)
+import Match.Model.Battlefield (Battlefield, Tile(..))
+import Match.Model.City (City)
 import Matrix (empty, repeat, set)
 
 createBattlefield :: Int -> Int -> Battlefield

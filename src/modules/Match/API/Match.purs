@@ -1,9 +1,10 @@
-module Match.Application.Match where
+module Match.API.Match where
 
 import Data.Map (empty, insert)
-import Match.Application.Battlefield (createBattlefield)
-import Match.Domain.Force (Force)
-import Match.Domain.Match (Match)
+import Match.API.Battlefield (createBattlefield)
+import Match.Model.Force (Force)
+import Match.Model.Match (Match)
+
 
 createMatch :: Int -> Int -> Match
 createMatch width height =

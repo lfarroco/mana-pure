@@ -1,10 +1,11 @@
-module Match.Application.Force where
+module Match.API.Force where
 
-import Match.Domain.Force
+import Match.Model.Force
 
-import Character.Domain as Chara
+import Hero.Model (Hero)
 import Data.Map (empty, insert)
-import Match.Domain.Squad (Squad)
+import Match.Model.Squad (Squad)
+
 
 createForce :: String -> String -> String -> Force
 createForce id_ name color =
@@ -12,12 +13,12 @@ createForce id_ name color =
   , name: Name name
   , color: Color color
   , squads: empty
-  , characters: empty
+  , heroes: empty
   }
 
-addCharacter:: Chara.Character -> Force -> Force
-addCharacter character force =
-  force { characters= insert character.id character force.characters}
+addHero:: Hero -> Force -> Force
+addHero hero force =
+  force { heroes= insert hero.id hero force.heroes}
 
 addSquad:: Squad -> Force -> Force
 addSquad squad force =

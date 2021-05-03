@@ -3,7 +3,6 @@ module Core.Models where
 import Data.Int (toNumber)
 import Data.Map (Map)
 
-
 type IndexOf a
   = Map String a
 
@@ -12,6 +11,9 @@ type IndexOf a
 type Vector
   = { x :: Number, y :: Number }
 
+vec :: Int -> Int -> Vector
+vec x y = { x: toNumber (x), y: toNumber (y) }
+
 -- When a vector refers to a position on a board,
 -- like in checkers
 type BoardSquare
@@ -19,16 +21,11 @@ type BoardSquare
     , y :: Int
     }
 
-vec :: Int -> Int -> Vector
-vec x y = { x: toNumber (x), y: toNumber (y) }
+boardSquare :: Int -> Int -> BoardSquare
+boardSquare x y = { x, y }
 
 type Size
   = { width :: Number, height :: Number }
 
 size :: Int -> Int -> Size
 size width height = { width: toNumber width, height: toNumber height }
-
-type State state
-  = state
-
-

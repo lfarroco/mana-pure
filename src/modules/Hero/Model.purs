@@ -1,22 +1,16 @@
-module Character.Domain where
+module Hero.Model where
 
 import Prelude
 import Core.BoundedNumber (BoundedNumber, createBoundedNumber)
 import Data.Map (Map)
-import Job.Domain (Job)
+import Job.Model (Job)
 
-newtype Id = Id String
+type Id = String
 
-derive instance eqId :: Eq Id
-derive instance ordId :: Ord Id
-
-newtype Name = Name String
-
-type Character
+type Hero
   = { id :: Id 
-    , name :: Name
+    , name :: String
     , job :: Job
-    , age :: Int
     , hp :: HitPoints
     }
 
