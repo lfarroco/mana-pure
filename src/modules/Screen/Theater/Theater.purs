@@ -1,16 +1,13 @@
 module Screen.Theater where
 
 import Prelude
-import Core.Models (BoardSquare, Vector, size, vec)
-import Data.Array (head, tail)
+import Core.Models (BoardSquare, vec)
 import Data.Foldable (for_)
 import Data.Map (Map)
 import Data.Map as Map
-import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Graphics.Phaser.Container as Container
 import Graphics.Phaser.Loader (loadImages)
-import Graphics.Phaser.Scene (SceneConfig, launchByKey, startByKey)
+import Graphics.Phaser.Scene (SceneConfig, startByKey)
 import Hero.API (createHero)
 import Hero.Animation (render)
 import Hero.Model (Hero)
