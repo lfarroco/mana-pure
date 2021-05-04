@@ -26,7 +26,7 @@ data Events
   = NoOp
 
 type Model
-  = { heroes :: Map String { hero :: Hero, pos :: BoardSquare }
+  = { heroes :: Map String { hero :: Hero, pos :: BoardSquare, front :: Boolean }
     }
 
 preload :: PhaserScene -> Effect Unit
@@ -44,13 +44,16 @@ row text_ n = customText (\cfg -> cfg { color = "#fff" }) { x: 0.0, y: (100.0 + 
 create :: PhaserScene -> Model -> Effect Unit
 create scn model =
   void do
-    for_ model.heroes (\{ hero, pos } -> renderHero hero pos scn)
-    button { x: 700, y: 400 } "Return" (\_ -> startByKey "main" {} scn) scn
+    for_ model.heroes (\{ hero, pos, front } -> renderHero hero pos front scn)
+    button { x: 700, y: 500 } "Return" (\_ -> startByKey "main" {} scn) scn
 
-renderHero :: Hero -> BoardSquare -> PhaserScene -> Effect Unit
-renderHero hero pos scene_ =
-  void do
-    render hero.id (cartesianToIsometric (vec 200 0) pos) scene_
+renderHero :: Hero -> BoardSquare -> Boolean -> PhaserScene -> Effect Unit
+renderHero hero pos front scene_ =
+  let
+    origin = if front then vec 200 0 else vec 520 380
+  in
+    void do
+      render hero.id (cartesianToIsometric origin pos) ({ x: 0.5, y: 0.5 }) front scene_
 
 scene :: SceneConfig Model
 scene =
@@ -73,13 +76,22 @@ state :: Model
 state =
   { heroes:
       Map.empty
-        # Map.insert "a" { hero: createHero "a", pos: { x: 1, y: 1 } }
-        # Map.insert "b" { hero: createHero "b", pos: { x: 1, y: 2 } }
-        # Map.insert "c" { hero: createHero "c", pos: { x: 1, y: 3 } }
-        # Map.insert "d" { hero: createHero "d", pos: { x: 2, y: 1 } }
-        # Map.insert "e" { hero: createHero "e", pos: { x: 2, y: 2 } }
-        # Map.insert "f" { hero: createHero "f", pos: { x: 2, y: 3 } }
-        # Map.insert "g" { hero: createHero "g", pos: { x: 3, y: 1 } }
-        # Map.insert "h" { hero: createHero "h", pos: { x: 3, y: 2 } }
-        # Map.insert "i" { hero: createHero "i", pos: { x: 3, y: 3 } }
+        # Map.insert "a" { hero: createHero "a", pos: { x: 1, y: 1 }, front: true }
+        # Map.insert "b" { hero: createHero "b", pos: { x: 1, y: 2 }, front: true }
+        # Map.insert "c" { hero: createHero "c", pos: { x: 1, y: 3 }, front: true }
+        # Map.insert "d" { hero: createHero "d", pos: { x: 2, y: 1 }, front: true }
+        # Map.insert "e" { hero: createHero "e", pos: { x: 2, y: 2 }, front: true }
+        # Map.insert "f" { hero: createHero "f", pos: { x: 2, y: 3 }, front: true }
+        # Map.insert "g" { hero: createHero "g", pos: { x: 3, y: 1 }, front: true }
+        # Map.insert "h" { hero: createHero "h", pos: { x: 3, y: 2 }, front: true }
+        # Map.insert "i" { hero: createHero "i", pos: { x: 3, y: 3 }, front: true }
+        # Map.insert "j" { hero: createHero "j", pos: { x: 1, y: 1 }, front: false }
+        # Map.insert "k" { hero: createHero "k", pos: { x: 1, y: 2 }, front: false }
+        # Map.insert "l" { hero: createHero "l", pos: { x: 1, y: 3 }, front: false }
+        # Map.insert "m" { hero: createHero "m", pos: { x: 2, y: 1 }, front: false }
+        # Map.insert "n" { hero: createHero "n", pos: { x: 2, y: 2 }, front: false }
+        # Map.insert "o" { hero: createHero "o", pos: { x: 2, y: 3 }, front: false }
+        # Map.insert "p" { hero: createHero "p", pos: { x: 3, y: 1 }, front: false }
+        # Map.insert "q" { hero: createHero "q", pos: { x: 3, y: 2 }, front: false }
+        # Map.insert "r" { hero: createHero "r", pos: { x: 3, y: 3 }, front: false }
   }

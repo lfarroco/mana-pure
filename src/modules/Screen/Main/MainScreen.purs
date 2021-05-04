@@ -34,10 +34,13 @@ preload =
     $ ( map (\k -> { key: k, path: "assets/" <> k <> ".svg" })
           [ "chara/head_male"
           , "chara/head_female"
+          , "chara/head_back"
           , "chara/trunk_fighter"
+          , "chara/trunk_fighter_back"
           , "chara/hand"
           , "chara/foot"
           , "chara/hair/male1"
+          , "chara/hair/male1_back"
           , "equips/iron_sword"
           , "equips/iron_helm"
           , "equips/iron_spear"
