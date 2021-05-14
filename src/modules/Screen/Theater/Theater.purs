@@ -1,20 +1,24 @@
 module Screen.Theater where
 
 import Prelude
-import Core.Models (BoardSquare, vec)
+import Assets.Images as Images
+import Core.Models (BoardSquare, size, vec)
 import Data.Foldable (for_)
 import Data.Map (Map)
 import Data.Map as Map
 import Effect (Effect)
+import Graphics.Phaser.GameObject as GO
+import Graphics.Phaser.Image as Image
 import Graphics.Phaser.Loader (loadImages)
 import Graphics.Phaser.Scene (SceneConfig, startByKey)
 import Hero.API (createHero)
 import Hero.Animation (render)
 import Hero.Model (Hero)
-import Phaser.Graphics.ForeignTypes (PhaserScene, PhaserText)
+import Phaser.Graphics.ForeignTypes (PhaserScene, PhaserText, PhaserImage)
 import Screen.Theater.Isometric (cartesianToIsometric)
 import UI.Button (button)
 import UI.Text (customText)
+import Config as Config
 
 key :: String
 key = "TheaterScreen"
@@ -24,6 +28,7 @@ data Events
 
 type Model
   = { heroes :: Map String { hero :: Hero, pos :: BoardSquare, front :: Boolean }
+    , background :: String
     }
 
 preload :: PhaserScene -> Effect Unit
@@ -38,12 +43,19 @@ update _ = pure unit
 row :: String -> Number -> PhaserScene -> Effect PhaserText
 row text_ n = customText (\cfg -> cfg { color = "#fff" }) { x: 0.0, y: (100.0 + n * 40.0) } text_
 
+background :: String -> PhaserScene -> Effect PhaserImage
+background bgKey =
+  Image.create bgKey (vec 0 0)
+    >=> GO.setOrigin (vec 0 0)
+    >=> GO.setDisplaySize (Config.screenSize)
+
 create :: PhaserScene -> Model -> Effect Unit
 create scn model =
   void do
+    _ <- background model.background scn
     for_ model.heroes (\{ hero, pos, front } -> renderHero hero pos front scn)
-    button { x: 700, y: 500 } "Return" (\_ -> startByKey "main" {} scn) scn
 
+-- button { x: 700, y: 500 } "Return" (\_ -> startByKey "main" {} scn) scn
 renderHero :: Hero -> BoardSquare -> Boolean -> PhaserScene -> Effect Unit
 renderHero hero pos front scene_ =
   let
@@ -71,7 +83,8 @@ start scn = do
 
 state :: Model
 state =
-  { heroes:
+  { background: Images.backgrounds.plain.key
+  , heroes:
       Map.empty
         # Map.insert "a" { hero: createHero "a", pos: { x: 1, y: 1 }, front: true }
         # Map.insert "b" { hero: createHero "b", pos: { x: 1, y: 2 }, front: true }

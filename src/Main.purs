@@ -11,7 +11,7 @@ import Screen.Theater as Theater
 import Screen.Main (mainScreen)
 
 main :: Effect Unit
-main = void do runGame { width: 1024, height: 768 }
+main = void do runGame { width: 1920, height: 1080 }
 
 runGame :: { height :: Int, width :: Int } -> Effect PhaserGame
 runGame =

@@ -1,9 +1,10 @@
 module Screen.Main (mainScreen) where
 
+
 import Prelude
+import Config as Config
 import Assets.Images as Images
-import Core.Models (size, vec)
-import Data.Map as Map
+import Core.Models (vec)
 import Effect (Effect)
 import Graphics.Phaser.GameObject as GO
 import Graphics.Phaser.Image as Image
@@ -47,6 +48,7 @@ preload =
           , "equips/iron_shield"
           , "ui/button"
           , "backgrounds/sunset"
+          , "backgrounds/plain"
           ]
       )
 
@@ -60,7 +62,7 @@ bg :: PhaserScene -> Effect PhaserImage
 bg =
   Image.create Images.backgrounds.sunset.key (vec 0 0)
     >=> GO.setOrigin (vec 0 0)
-    >=> GO.setDisplaySize (size 800 600)
+    >=> GO.setDisplaySize (Config.screenSize)
 
 create :: PhaserScene -> Model -> Effect Unit
 create scene model =
